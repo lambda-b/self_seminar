@@ -19,10 +19,5 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.2"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "playwright-chromium"
-    ]
   }
 }
