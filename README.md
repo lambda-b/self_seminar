@@ -7,20 +7,20 @@
 ## 前提条件
 
 - Node.js
-- npm
+- pnpm
 
 Dev Container を使う場合は、このリポジトリを VS Code で開いて `Dev Containers: Reopen in Container` を実行してください。
 
 ## セットアップ
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## プレビュー
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 既定では Slidev のローカルサーバーが起動します。
@@ -28,7 +28,7 @@ npm run dev
 ## PDF出力
 
 ```bash
-npm run export
+pnpm export
 ```
 
 出力先:
@@ -58,8 +58,8 @@ Slidev / LaTeX の使い分けや、40-60分想定の構成方針は `docs/slide
 Biome を使います。
 
 ```bash
-npm run format
-npm run check
+pnpm format
+pnpm check
 ```
 
 Vue ファイルの formatter も Biome に寄せています。構文ハイライトと言語機能は Volar が担当するため、色が付かない場合は Dev Container を rebuild するか、VS Code の拡張機能を reload してください。

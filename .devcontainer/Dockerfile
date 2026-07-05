@@ -1,39 +1,22 @@
-# ここではベースイメージという、構築する環境の基礎となるイメージをDockerHubなどから選び記述します。
-# 今回は、Ubuntuイメージを使用します
 ARG VARIANT="jammy"
 FROM mcr.microsoft.com/devcontainers/base:${VARIANT}
 
-# 作成する環境の時間設定を日本時間にしておきます。これにより、ビルドが中断されなくなります。
 ENV TZ=Asia/Tokyo
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-# Node.js環境のセットアップ
+ENV PNPM_HOME=/usr/local/share/pnpm
+ENV PATH=${PNPM_HOME}:${PATH}
 ARG NODE_VERSION="24.12.0"
-RUN apt update && apt install -y nodejs npm
-RUN npm install -g n
-RUN n ${NODE_VERSION}
-RUN apt update && apt purge -y nodejs npm
-RUN apt update && apt -y autoremove
 
-# Codex CLI のインストール
-RUN npm install -g @openai/codex
-
-# AWS CLI のインストール (CDK実行に便利)
-# ARM64環境向け
-# RUN apt update && apt install -y curl unzip && \
-#   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-#   unzip awscliv2.zip && \
-#   ./aws/install && \
-#   rm -rf awscliv2.zip aws
-
-# Apple Silicon向け
-RUN apt update && apt install -y curl unzip && \
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" && \
-  unzip awscliv2.zip && \
-  ./aws/install && \
-  rm -rf awscliv2.zip aws
-
-# Graphviz のインストール (CDK構成図生成に必要)
-RUN apt update && apt install -y graphviz
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+  && echo $TZ > /etc/timezone \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates curl xz-utils \
+  && curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n -o /usr/local/bin/n \
+  && chmod +x /usr/local/bin/n \
+  && n ${NODE_VERSION} \
+  && corepack enable \
+  && corepack prepare pnpm@10.25.0 --activate \
+  && pnpm add -g @openai/codex \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 CMD ["bash"]

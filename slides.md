@@ -8,6 +8,7 @@ class: text-left
 drawings:
   persist: false
 transition: none
+routerMode: hash
 mdc: true
 comark: true
 fonts:
