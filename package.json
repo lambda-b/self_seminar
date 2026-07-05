@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "slidev slides.md --remote",
-    "build": "slidev build slides.md",
+    "build": "slidev build slides.md --base /self_seminar/",
     "export": "slidev export slides.md --output dist/probability-seminar.pdf",
     "format": "biome format --write .",
     "check": "biome check ."
