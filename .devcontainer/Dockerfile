@@ -15,6 +15,9 @@ RUN n ${NODE_VERSION}
 RUN apt update && apt purge -y nodejs npm
 RUN apt update && apt -y autoremove
 
+# Codex CLI のインストール
+RUN npm install -g @openai/codex
+
 # AWS CLI のインストール (CDK実行に便利)
 # ARM64環境向け
 # RUN apt update && apt install -y curl unzip && \
