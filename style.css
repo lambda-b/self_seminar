@@ -1,0 +1,53 @@
+:root {
+  --slidev-theme-primary: #176b87;
+}
+
+.slidev-layout {
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.slidev-layout h1 {
+  color: #12343b;
+  letter-spacing: 0;
+}
+
+.slidev-layout h2 {
+  color: #176b87;
+  letter-spacing: 0;
+}
+
+.slidev-layout.cover,
+.slidev-layout.section,
+.slidev-layout.end {
+  background: #f7faf9;
+  color: #12343b;
+}
+
+.slidev-layout.cover h1 {
+  font-size: 3.1rem;
+  line-height: 1.18;
+}
+
+.slidev-layout.section h1,
+.slidev-layout.end h1 {
+  font-size: 2.7rem;
+}
+
+table {
+  font-size: 0.95rem;
+}
+
+th {
+  color: #12343b;
+}
+
+@media print {
+  .slidev-layout {
+    font-size: 0.98rem;
+  }
+
+  .slidev-layout h1 {
+    font-size: 2rem;
+  }
+}

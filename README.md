@@ -40,3 +40,21 @@ dist/probability-seminar.pdf
 ## 方針メモ
 
 Slidev / LaTeX の使い分けや、40-60分想定の構成方針は `docs/slidev_plan.md` にまとめています。
+
+## スライド記法
+
+本文はできるだけ Markdown と Slidev の slot 記法で書きます。共通の見た目が必要な箇所は、MDC/Comark のブロックコンポーネントを使います。
+
+```md
+::note
+ここに補足を書く。inline 数式 $X_n \to X$ も Markdown として処理されます。
+::
+
+::diagram
+$(\Omega,\mathcal{F},P)$
+$\xrightarrow{\quad X\quad}$
+$(S,\mathcal{S},P_X)$
+::
+```
+
+スタイルは `style.css` と `components/` 配下に寄せています。Slidev は UnoCSS を内蔵しているため、コンポーネント内では Tailwind 互換の utility class を使えます。

@@ -9,6 +9,7 @@ drawings:
   persist: false
 transition: none
 mdc: true
+comark: true
 fonts:
   sans: Noto Sans JP
   serif: Noto Serif JP
@@ -20,21 +21,17 @@ layout: cover
 
 確率変数・収束・確率過程・応用までの見取り図
 
-<div class="mt-10 text-sm opacity-70">
-40-60分想定 / 測度論・Lebesgue積分の概論後
-</div>
+[40-60分想定 / 測度論・Lebesgue積分の概論後]{class="mt-10 text-sm opacity-70"}
 
 ---
-layout: default
+layout: two-cols-header
 ---
 
 # 今日のゴール
 
 測度論の言葉で確率論を読み替え、確率論でよく出てくる対象の位置づけをつかむ。
 
-<div class="grid grid-cols-2 gap-6 mt-8">
-
-<div>
+::left::
 
 ## 前半
 
@@ -44,9 +41,7 @@ layout: default
 - 4種類の収束
 - 大数の法則と中心極限定理
 
-</div>
-
-<div>
+::right::
 
 ## 後半
 
@@ -55,10 +50,6 @@ layout: default
 - ブラウン運動とMarkov性
 - 確率微分方程式の入口
 - ブラックショールズと最適戦略
-
-</div>
-
-</div>
 
 ---
 layout: default
@@ -105,12 +96,12 @@ $$
 | $P(A)$ | 事象 $A$ の確率 |
 | a.e. | a.s. |
 
-<div class="note">
+::note
 $\mathcal{F}$ は「観測・判定できる事象の集まり」と見ると、後の filtration とつながりやすい。
-</div>
+::
 
 ---
-layout: default
+layout: two-cols-header
 ---
 
 # 確率変数
@@ -123,9 +114,7 @@ $$
 
 のこと。
 
-<div class="grid grid-cols-2 gap-6 mt-8">
-
-<div>
+::left::
 
 ## 大事な見方
 
@@ -133,9 +122,7 @@ $$
 - 可測性は $X$ で事象を引き戻せる条件
 - $X^{-1}(B)\in\mathcal{F}$ により $P(X\in B)$ が定義できる
 
-</div>
-
-<div>
+::right::
 
 ## 一般化
 
@@ -146,10 +133,6 @@ $$
 可測空間値の確率変数として考えられる。
 
 例: $\mathbb{R}^d$ 値、関数空間値、経路値。
-
-</div>
-
-</div>
 
 ---
 layout: default
@@ -167,15 +150,15 @@ $$
 
 これを $X$ の **分布** という。
 
-<div class="diagram mt-8">
+::diagram
 $(\Omega,\mathcal{F},P)$
 $\xrightarrow{\quad X\quad}$
 $(S,\mathcal{S},P_X)$
-</div>
+::
 
-<div class="note mt-8">
+::note
 確率論では、個々の標本空間よりも「分布が何か」が主役になる場面が多い。
-</div>
+::
 
 ---
 layout: default
@@ -199,12 +182,12 @@ $$
 
 と書ける。
 
-<div class="note">
+::note
 測度論での積分が、そのまま期待値になる。確率論固有の記法に見えて、中身は Lebesgue 積分。
-</div>
+::
 
 ---
-layout: default
+layout: two-cols-header
 ---
 
 # 生成する $\sigma$ 加法族
@@ -217,17 +200,13 @@ $$
 
 を含む最小の $\sigma$ 加法族。
 
-<div class="grid grid-cols-2 gap-6 mt-8">
-
-<div>
+::left::
 
 ## 意味
 
 $X$ を観測して判別できる事象の全体。
 
-</div>
-
-<div>
+::right::
 
 ## 後で使う
 
@@ -235,10 +214,6 @@ $X$ を観測して判別できる事象の全体。
 - 条件付き期待値
 - filtration
 - Markov性
-
-</div>
-
-</div>
 
 ---
 layout: default
@@ -262,9 +237,9 @@ $$
 
 が独立であること。
 
-<div class="note">
+::note
 「値が無関係」という直感を、可測集合全体の積構造として定式化している。
-</div>
+::
 
 ---
 layout: section
@@ -287,12 +262,12 @@ layout: default
 | $L^p$ 収束 | $E[|X_n-X|^p]\to0$ |
 | 法則収束 | $P_{X_n}\Rightarrow P_X$ |
 
-<div class="note">
+::note
 法則収束は、$X_n$ と $X$ が同一の確率空間上にある必要がない。
-</div>
+::
 
 ---
-layout: default
+layout: two-cols-header
 ---
 
 # 収束概念の関係
@@ -307,27 +282,19 @@ $$
 \text{概収束}\Rightarrow\text{確率収束}\Rightarrow\text{法則収束}
 $$
 
-<div class="grid grid-cols-2 gap-6 mt-8">
-
-<div>
+::left::
 
 ## 強い情報
 
 概収束、$L^p$ 収束は、同じ確率空間上の比較をしている。
 
-</div>
-
-<div>
+::right::
 
 ## 弱い情報
 
 法則収束は、分布だけを見る。
 
 同じ $\omega$ ごとの比較はしない。
-
-</div>
-
-</div>
 
 ---
 layout: default
@@ -347,9 +314,9 @@ $$
 P(|X_n-X|>\varepsilon)\to0
 $$
 
-<div class="note">
+::note
 概収束は「ほとんどすべての標本路で最後は収束する」。確率収束は「各時点で外れる確率が小さくなる」。
-</div>
+::
 
 ---
 layout: default
@@ -371,9 +338,9 @@ $$
 
 と見てもよい。
 
-<div class="note">
+::note
 中心極限定理は「標準化された和が正規分布へ法則収束する」という定理として理解する。
-</div>
+::
 
 ---
 layout: section
@@ -382,7 +349,7 @@ layout: section
 # 3. 大数の法則と中心極限定理
 
 ---
-layout: default
+layout: two-cols-header
 ---
 
 # 大数の法則
@@ -397,9 +364,7 @@ $$
 
 は、期待値 $m=E[X_1]$ に近づく。
 
-<div class="grid grid-cols-2 gap-6 mt-8">
-
-<div>
+::left::
 
 ## 弱法則
 
@@ -409,9 +374,7 @@ $$
 
 in probability
 
-</div>
-
-<div>
+::right::
 
 ## 強法則
 
@@ -420,10 +383,6 @@ $$
 $$
 
 almost surely
-
-</div>
-
-</div>
 
 ---
 layout: default
@@ -461,9 +420,9 @@ $$
 \Rightarrow N(0,1)
 $$
 
-<div class="note">
+::note
 平均そのものは $m$ に近づく。一方、$\sqrt{n}$ 倍して揺らぎを拡大すると、極限分布として正規分布が現れる。
-</div>
+::
 
 ---
 layout: default
@@ -484,9 +443,9 @@ $$
 \sqrt{n}\frac{\overline{X}_n-m}{\sigma}\Rightarrow N(0,1)
 $$
 
-<div class="note">
+::note
 「平均が収束する」と「収束の周りの揺らぎがどう見えるか」は別の問い。
-</div>
+::
 
 ---
 layout: section
@@ -514,9 +473,9 @@ $$
 
 が確率変数である。
 
-<div class="note">
+::note
 $\omega$ を固定すると $t\mapsto X_t(\omega)$ という関数が得られる。これを標本路という。
-</div>
+::
 
 ---
 layout: default
@@ -532,15 +491,15 @@ $$
 
 という関数空間値確率変数として見られる。
 
-<div class="diagram mt-8">
+::diagram
 $\omega$
 $\longmapsto$
 $(X_t(\omega))_{t\ge0}$
-</div>
+::
 
-<div class="note mt-8">
+::note
 確率過程は「時間ごとの確率変数の族」でもあり、「ランダムな関数」でもある。
-</div>
+::
 
 ---
 layout: default
@@ -578,9 +537,9 @@ $$
 
 かつ、互いに重ならない時間区間の増分は独立。
 
-<div class="note">
+::note
 「時間とともにランダムにジャンプする」過程。ブラウン運動は「連続的に揺れる」過程。
-</div>
+::
 
 ---
 layout: default
@@ -595,9 +554,9 @@ layout: default
 3. $0\le s<t$ に対して $B_t-B_s\sim N(0,t-s)$
 4. 重ならない時間区間の増分は独立
 
-<div class="note">
+::note
 連続な標本路を持つが、典型的には非常に荒く、有限変動でも微分可能でもない。
-</div>
+::
 
 ---
 layout: default
@@ -621,9 +580,9 @@ $$
 
 がブラウン運動になるような確率測度を Wiener 測度という。
 
-<div class="note">
+::note
 確率過程を「経路空間上の確率測度」と見る視点は、測度論的確率論の中心的な発想。
-</div>
+::
 
 ---
 layout: default
@@ -672,9 +631,9 @@ $$
 X_t=X_0+\int_0^t b(X_s)\,ds+\int_0^t \sigma(X_s)\,dB_s
 $$
 
-<div class="note">
+::note
 $dB_t$ は通常の微分ではない。厳密には Itô 積分として定義する。
-</div>
+::
 
 ---
 layout: section
@@ -702,9 +661,9 @@ $$
 | $\sigma$ | ボラティリティ |
 | $B_t$ | ブラウン運動 |
 
-<div class="note">
+::note
 価格そのものではなく、相対変化率にランダムな揺らぎが入るモデル。
-</div>
+::
 
 ---
 layout: default
@@ -749,9 +708,9 @@ layout: default
 - 条件付き期待値
 - リスク中立測度
 
-<div class="note">
+::note
 この勉強会では厳密な金融数学の完成より、「確率過程が解析と応用へ接続する」ことを見せる位置づけにする。
-</div>
+::
 
 ---
 layout: default
@@ -768,9 +727,9 @@ layout: default
 - 停止時刻
 - 動的計画法
 
-<div class="note">
+::note
 「事前に全部見られない」「途中で止める必要がある」という状況では、情報の増え方が本質になる。
-</div>
+::
 
 ---
 layout: default
@@ -792,9 +751,9 @@ $$
 V_k=E[\max(D,V_{k-1})]
 $$
 
-<div class="note">
+::note
 「今の値で止める」か「続ける期待価値を選ぶ」か、という再帰構造が現れる。
-</div>
+::
 
 ---
 layout: default
@@ -833,9 +792,9 @@ layout: default
 | 上位 $q$% 以内を採る確率最大化 | しきい値が変わる |
 | 採用しないリスクにペナルティ | さらに早めに止める |
 
-<div class="note">
+::note
 ここはシミュレーションとの相性がよい。Reactで候補数・目的関数・しきい値を変えられると議論しやすい。
-</div>
+::
 
 ---
 layout: default
@@ -870,27 +829,17 @@ layout: default
 
 # 全体像
 
-<div class="flow">
-測度論
-<span>→</span>
-確率空間
-<span>→</span>
-確率変数
-<span>→</span>
-分布
-<span>→</span>
-収束
-<span>→</span>
-確率過程
-<span>→</span>
-応用
-</div>
-
-<div class="mt-10">
+::flow
+- 測度論
+- 確率空間
+- 確率変数
+- 分布
+- 収束
+- 確率過程
+- 応用
+::
 
 今日の主眼は、個々の定理を証明し切ることではなく、測度論の言葉が確率論のどこで効くかを見えるようにすること。
-
-</div>
 
 ---
 layout: default
@@ -909,9 +858,9 @@ layout: default
 3. 応用へ進む  
    ブラックショールズ、最適停止、秘書問題シミュレータ
 
-<div class="note">
+::note
 参加者の関心が物理・生物寄りなら、拡散過程やブラウン運動を厚めにするのも自然。
-</div>
+::
 
 ---
 layout: default
@@ -923,9 +872,9 @@ layout: default
 - 舟木直久『確率微分方程式』
 - 既存メモ: `work/kakuritsubibun01.tex`
 
-<div class="note">
+::note
 本資料は勉強会用の導入資料として構成した。厳密な証明は必要に応じて補助ノートに分ける。
-</div>
+::
 
 ---
 layout: end
@@ -938,90 +887,3 @@ layout: end
 - 一回完結にするか、複数回シリーズにするか
 - ブラックショールズをどこまで厚くするか
 - 秘書問題シミュレータを別プロジェクトにするか
-
-<style>
-:root {
-  --slidev-theme-primary: #176b87;
-}
-
-.slidev-layout {
-  font-size: 1.02rem;
-  line-height: 1.55;
-}
-
-.slidev-layout h1 {
-  color: #12343b;
-  letter-spacing: 0;
-}
-
-.slidev-layout h2 {
-  color: #176b87;
-  letter-spacing: 0;
-}
-
-.slidev-layout.cover,
-.slidev-layout.section,
-.slidev-layout.end {
-  background: #f7faf9;
-  color: #12343b;
-}
-
-.slidev-layout.cover h1 {
-  font-size: 3.1rem;
-  line-height: 1.18;
-}
-
-.slidev-layout.section h1,
-.slidev-layout.end h1 {
-  font-size: 2.7rem;
-}
-
-.note {
-  border-left: 4px solid #176b87;
-  background: #eef6f6;
-  padding: 0.8rem 1rem;
-  border-radius: 4px;
-}
-
-.diagram {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  min-height: 7rem;
-  border: 1px solid #d8e7e5;
-  border-radius: 6px;
-  background: #fbfdfc;
-  font-size: 1.4rem;
-}
-
-.flow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  align-items: center;
-  font-size: 1.35rem;
-}
-
-.flow span {
-  color: #176b87;
-}
-
-table {
-  font-size: 0.95rem;
-}
-
-th {
-  color: #12343b;
-}
-
-@media print {
-  .slidev-layout {
-    font-size: 0.98rem;
-  }
-
-  .slidev-layout h1 {
-    font-size: 2rem;
-  }
-}
-</style>
