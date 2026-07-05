@@ -76,25 +76,73 @@ layout: section
 
 # 確率空間
 
-測度空間 $(\Omega,\mathcal{F},P)$ が
+測度空間 $(\Omega,\mathcal{F},P)$ が以下を満たすとき、**確率空間** と呼ぶ。
 
 $$
 P(\Omega)=1
 $$
 
-を満たすとき、これを **確率空間** と呼ぶ。
-
-| 測度論 | 確率論での読み方 |
+| 記号 | 確率論での読み方 |
 |---|---|
 | $\Omega$ | 標本空間 |
 | $\omega\in\Omega$ | 標本、実現値 |
 | $A\in\mathcal{F}$ | 事象 |
 | $P(A)$ | 事象 $A$ の確率 |
-| a.e. | a.s. |
 
 ::note
-$\mathcal{F}$ は「観測・判定できる事象の集まり」と見ると、後の filtration とつながりやすい。
+測度論の a.e. は、確率論では a.s. と呼ぶ。$\mathcal{F}$ は「観測・判定できる事象の集まり」と見ると、後の filtration とつながりやすい。
 ::
+
+---
+layout: two-cols-header
+---
+
+# 確率測度の具体例
+
+同じ「測度と積分」の形で、離散分布と連続分布を見ておく。
+
+::left::
+
+## 離散: 二項分布
+
+$X\sim\mathrm{Bin}(n,p)$ とする。
+
+$$
+\Omega=\{0,1,\dots,n\},\quad \mathcal{F}=2^\Omega
+$$
+
+$$
+P(\{k\})=\binom{n}{k}p^k(1-p)^{n-k}
+$$
+
+関数 $f:\Omega\to\mathbb{R}$ の積分は
+
+$$
+\int_\Omega f\,dP=\sum_{k=0}^n f(k)P(\{k\})
+$$
+
+::right::
+
+## 連続: 正規分布
+
+$X\sim N(\mu,\sigma^2)$ とする。
+
+$$
+\Omega=\mathbb{R},\quad \mathcal{F}=\mathcal{B}(\mathbb{R})
+$$
+
+$$
+P(A)=\int_A
+\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)\,dx
+$$
+
+関数 $f:\mathbb{R}\to\mathbb{R}$ の積分は
+
+$$
+\int_\mathbb{R} f\,dP
+=\int_\mathbb{R} f(x)\varphi_{\mu,\sigma}(x)\,dx
+$$
 
 ---
 layout: two-cols-header
