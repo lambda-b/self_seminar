@@ -1,0 +1,17 @@
+{
+  "name": "self-seminar-probability",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev slides.md --remote",
+    "build": "slidev build slides.md",
+    "export": "slidev export slides.md --output dist/probability-seminar.pdf"
+  },
+  "dependencies": {
+    "@slidev/cli": "^52.1.0",
+    "@slidev/theme-default": "^0.25.0",
+    "katex": "^0.16.22",
+    "playwright-chromium": "^1.54.1"
+  }
+}
