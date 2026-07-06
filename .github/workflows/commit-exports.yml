@@ -1,0 +1,80 @@
+name: Commit Exports
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "export/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: commit-exports-main
+  cancel-in-progress: true
+
+jobs:
+  commit-exports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Commit generated exports
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          for attempt in 1 2 3; do
+            echo "Export commit attempt ${attempt}"
+            git fetch origin main
+            git reset --hard origin/main
+
+            rm -rf dist export
+            pnpm export
+
+            mkdir -p export
+            cp dist/probability-seminar.pdf export/probability-seminar.pdf
+
+            git add -A export
+
+            if git diff --cached --quiet; then
+              echo "Generated exports are already up to date."
+              exit 0
+            fi
+
+            git commit -m "Update generated exports"
+
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
+            git reset --hard HEAD~1
+            sleep 5
+          done
+
+          echo "Failed to push generated exports after retries." >&2
+          exit 1

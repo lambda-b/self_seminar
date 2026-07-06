@@ -37,6 +37,12 @@ pnpm export
 dist/probability-seminar.pdf
 ```
 
+`main` に push すると GitHub Actions でもPDFを生成し、最新版を以下にコミットします。
+
+```text
+export/probability-seminar.pdf
+```
+
 ## GitHub Pages
 
 `main` に push されると GitHub Actions で Slidev をビルドし、GitHub Pages に公開します。
