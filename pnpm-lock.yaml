@@ -24,9 +24,6 @@ importers:
       '@slidev/types':
         specifier: 52.16.0
         version: 52.16.0(@nuxt/kit@3.21.8)(@vue/compiler-sfc@3.5.39)(rolldown@1.1.4)(typescript@6.0.3)(vite@8.1.3(@types/node@22.20.0)(jiti@2.7.0)(yaml@2.9.0))
-      playwright-chromium:
-        specifier: ^1.54.1
-        version: 1.61.1
 
 packages:
 
@@ -6220,8 +6217,10 @@ snapshots:
   playwright-chromium@1.61.1:
     dependencies:
       playwright-core: 1.61.1
+    optional: true
 
-  playwright-core@1.61.1: {}
+  playwright-core@1.61.1:
+    optional: true
 
   points-on-curve@0.2.0: {}
 
