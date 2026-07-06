@@ -1269,6 +1269,7 @@ layout: section
 
 - 熊谷隆『確率論』
 - 舟木直久『確率微分方程式』
+- [AIcia Solid Project「確率微分方程式」シリーズ動画](https://www.youtube.com/watch?v=NE1W0wJH8q8&list=PLhDAH9aTfnxIhf-iRKYTVOSXPqDGgfRFP)
 - 既存メモ: `work/kakuritsubibun01.tex`
 
 ::note
