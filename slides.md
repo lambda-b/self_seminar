@@ -2,8 +2,7 @@
 theme: default
 title: 測度論から確率論へ
 info: |
-  理学部出身者向けの確率論勉強会資料。
-  PDF出力を前提に、定義・直感・応用の流れを重視する。
+  測度論の直感・応用の流れを理解する。
 class: text-left
 drawings:
   persist: false
@@ -1246,44 +1245,8 @@ layout: section
 
 ---
 
-# 次に深掘りするなら
-
-候補は3方向。
-
-1. 収束定理を丁寧にやる  
-   Borel-Cantelli、強法則、特性関数、中心極限定理
-
-2. 確率過程へ進む  
-   filtrations、条件付き期待値、Martingale、停止時刻、Brown運動
-
-3. 応用へ進む  
-   伊藤の公式、Black-Scholes、最適停止、秘書問題
-
-::note
-参加者の関心が物理・生物寄りなら、拡散過程やBrown運動を厚めにするのも自然。
-::
-
----
-
 # 参考文献
 
-- 熊谷隆『確率論』
-- 舟木直久『確率微分方程式』
+- [熊谷隆『確率論』](https://www.amazon.co.jp/dp/4320017315)
+- [舟木直久『確率微分方程式』](https://www.amazon.co.jp/dp/4000051962)
 - [AIcia Solid Project「確率微分方程式」シリーズ動画](https://www.youtube.com/watch?v=NE1W0wJH8q8&list=PLhDAH9aTfnxIhf-iRKYTVOSXPqDGgfRFP)
-- 既存メモ: `work/kakuritsubibun01.tex`
-
-::note
-本資料は勉強会用の導入資料として構成した。厳密な証明は必要に応じて補助ノートに分ける。
-::
-
----
-layout: end
----
-
-# おしまい
-
-議論したいところ:
-
-- 一回完結にするか、複数回シリーズにするか
-- Black-Scholesをどこまで厚くするか
-- Martingaleと最適停止をどこまで掘るか
