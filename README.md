@@ -37,7 +37,7 @@ pnpm export
 dist/probability-seminar.pdf
 ```
 
-`main` に push すると GitHub Actions でもPDFを生成し、最新版を以下にコミットします。
+`main` に push すると GitHub Actions でもPDFを生成し、レポジトリ上では最新版のPDFを以下に配置してコミットします。
 
 ```text
 export/probability-seminar.pdf
