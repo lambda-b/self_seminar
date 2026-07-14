@@ -839,11 +839,22 @@ $$
 
 Markov性は、未来の分布が現在だけで決まり、過去の詳細には依存しないという性質。
 
-Poisson過程もWiener過程も、Markov性を持つ代表的な確率過程。
+過程 $(X_t)$ がMarkov性を持つなら、時刻 $s$ までの情報 $\mathcal{F}_s$ を知っていても、未来の予測に必要なのは現在値 $X_s$。
 
-時刻 $s$ までの情報 $\mathcal{F}_s$ を知っていても、未来を予測するために必要なのは現在の状態。
+$$
+E[f(X_t)\mid\mathcal{F}_s]=\varphi_{s,t}(X_s)
+\quad(s\le t)
+$$
 
-過去の経路全体ではなく、現在値が未来の分布を決める。
+つまり、条件付き期待値が $X_s$ の関数として書ける。
+
+::example-box{title="例"}
+Poisson過程では $E[N_t\mid\mathcal{F}_s]=N_s+\lambda(t-s)$。
+
+Wiener過程では $E[W_t\mid\mathcal{F}_s]=W_s$。
+::
+
+どちらもMarkov性を持つ代表的な確率過程。
 
 ---
 layout: two-cols-header
