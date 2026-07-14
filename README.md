@@ -24,6 +24,22 @@ pnpm dev
 ```
 
 既定では Slidev のローカルサーバーが起動します。
+秘書問題の補足シミュレータも同時に `http://localhost:5174/` で起動します。
+
+## 補足アプリ
+
+一般化された秘書問題の最適戦略シミュレータは、独立した React/Vite
+プロジェクトとして次に配置しています。
+
+```text
+supplement/secretary-simulator/
+```
+
+スライド内のリンクからポップアップで開きます。単体で起動する場合:
+
+```bash
+pnpm --dir supplement/secretary-simulator dev
+```
 
 ## PDF出力
 
