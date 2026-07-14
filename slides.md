@@ -634,8 +634,6 @@ layout: two-cols-header
 
 ::left::
 
-## $\sigma$加法族に対する条件付き期待値
-
 部分 $\sigma$ 加法族 $\mathcal{G}\subset\mathcal{F}$ に対する条件付き期待値
 
 $$
@@ -841,20 +839,29 @@ $$
 
 Markov性は、未来の分布が現在だけで決まり、過去の詳細には依存しないという性質。
 
-Brown運動では、
+Poisson過程もWiener過程も、Markov性を持つ代表的な確率過程。
+
+Wiener過程では $0\le s<t$ に対して
 
 $$
-W_{t+s}-W_s
+W_t-W_s
 $$
 
-が $\mathcal{F}_s$ と独立で、分布は $W_t$ と同じ。
-
-条件付き期待値で書けば、
+が時刻 $s$ までの情報 $\mathcal{F}_s$ と独立で、
 
 $$
-E[f(W_{t+s})\mid\mathcal{F}_s]
-=E_{W_s}[f(W_t)]
+W_t-W_s\sim N(0,t-s)
 $$
+
+が成り立つ。
+
+このため
+
+$$
+E[W_t-W_s\mid\mathcal{F}_s]=0
+$$
+
+となる。未来の増分は、過去を見ても平均0のまま。
 
 ---
 layout: two-cols-header
