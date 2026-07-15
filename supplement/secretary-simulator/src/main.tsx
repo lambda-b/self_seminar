@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App";
+import App from "@/App";
 import "katex/dist/katex.min.css";
-import "./tailwind.css";
+import "@/tailwind.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("Root element was not found");

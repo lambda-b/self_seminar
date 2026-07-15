@@ -1,6 +1,6 @@
 import { useDeferredValue, useMemo, useState } from "react";
-import Explanation from "./Explanation.mdx";
-import { buildStrategy, recommend } from "./strategy";
+import Explanation from "@/Explanation.mdx";
+import { buildStrategy, recommend } from "@/strategy";
 
 type UtilityMode = "best" | "top3" | "topM" | "linear" | "custom";
 

@@ -11,6 +11,9 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "types": ["vite/client", "@mdx-js/react", "mdx"],
     "resolveJsonModule": true,
     "isolatedModules": true,

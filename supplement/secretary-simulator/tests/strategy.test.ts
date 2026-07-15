@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildStrategy, finalRankDistribution, recommend } from "../src/strategy";
+import { buildStrategy, finalRankDistribution, recommend } from "@/strategy";
 
 describe("finalRankDistribution", () => {
   it("is uniform before any comparison is available", () => {
