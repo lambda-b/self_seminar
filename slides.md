@@ -899,23 +899,51 @@ Wiener過程 $(W_t)$ もMartingale。
 ::
 
 ---
+layout: two-cols-header
+---
 
-# 伊藤積分は紹介に留める
+# 確率積分
 
-Brown運動に沿った積分
+::left::
+
+## 確率積分とは
+
+確立過程の増分に対する確率積分は以下の通り右辺値の極限として表される。
 
 $$
-\int_0^t H_s\,dW_s
+\int_0^T f(W_t)\,dW_t \simeq \sum_i f(W_{t_i}) (W_{t_{i+1}} - W_{t_i})
 $$
 
-は、普通のリーマン-Stieltjes積分としては扱いにくい。
+このとき右辺にある通り、分割する区間の左端値で評価している点に注意。
 
-Brown運動の標本路は連続だが、典型的には有界変動ではないため。
+また、特にWiener過程は、形式的に以下の式が成立する。
 
-この勉強会では、伊藤積分の構成は深入りせず、次の2点だけ押さえる。
+$$
+dW_t^2 = dt
+$$
 
-- 未来を見ない適合過程に対して定義される積分
-- 伊藤の公式で、通常の微分公式とは違う2階微分項が現れる
+これは、感覚的にはWiener過程は二項分布の極限であるから、十分小さい変動$dW_t$の2乗が確定値として分散値の$dt$になることは想像できる。
+
+::right::
+
+::aside-box{title="補足: 左端評価について"}
+
+通常のRiemann積分であれば区間内の任意の点による評価で値は変わらない。
+
+しかし、確率積分において、$W_t$の積分を考える際に、右端評価を行うと
+
+$$
+\begin{align*}
+\sum W_{t_{i+1}} (W_{t_{i+1}} - W_{i}) &= \sum(W_{t_{i+1}} - W_{t_i} + W_{t_i}) (W_{t_{i+1}} - W_{t_i})\\
+&= \sum(W_{t_{i+1}} - W_{t_i})^2 + \sum W_{t_i}(W_{t_{i+1}} - W_{t_i})\\
+&= T + \sum W_{t_i}(W_{t_{i+1}} - W_{t_i})
+\end{align*}
+$$
+となり、$T$の分だけ差分が生じる。(途中$dW_t^2 \sim dt$を用いている。)
+
+これは確率過程(ここでは特にWiener過程)が有界変動でないこと、すなわち$|dW_t/dt| \to \infty$となることに由来する。
+
+::
 
 ---
 layout: two-cols-header
@@ -958,62 +986,72 @@ $$
 というルールで2階微分項が残る。
 
 ---
-
-# 2階微分項が残る意味
-
-普通の滑らかな経路なら、微小変化の2乗は高次の小さい量として消える。
-
-しかしBrown運動では、
-
-$$
-W_{t+\Delta t}-W_t
-$$
-
-の大きさが典型的に $\sqrt{\Delta t}$ 程度なので、2乗すると $\Delta t$ 程度になる。
-
-つまり、
-
-$$
-(\Delta W)^2\sim \Delta t
-$$
-
-が極限で無視できず、伊藤の公式に
-
-$$
-\frac12\sigma^2\partial_{xx}f\,dt
-$$
-
-が現れる。
-
-::note
-金融工学では、この2階微分項がBlack-Scholes方程式のガンマ項につながる。
-::
-
----
 layout: two-cols-header
 ---
 
-# 確率微分方程式の例
+# 確率微分方程式を解く
 
 ::left::
-
-## Brown運動に駆動される
-
-$$
-dX_t=b(t,X_t)\,dt+\sigma(t,X_t)\,dW_t
+(1)
 $$
 
-ドリフト項とランダムな揺らぎを持つ過程。
+d X_t = \alpha \, dW_t
+
+\Rightarrow
+
+X_t = \alpha W_t
+
+$$
+
+(2)
+
+$$
+
+d X_t = \beta W_t\, dW_t
+
+\Rightarrow
+
+X_t = \frac{\beta}{2}W_t^2 - \frac{\beta}{2}t
+
+$$
+
+上記は実際に伊藤の公式を満たすことを確認できる。
+また、以下の計算でも得ることが可能。
+
+$$
+\begin{align*}
+X_t &= \beta \sum W_{t_i}(W_{t_{i+1}} - W_{t_i})\\
+&= \frac{\beta}{2} \sum (W_{t_i} + W_{t_{i+1}} + W_{t_i} - W_{t_{i+1}})(W_{t_{i+1}} - W_{t_i})\\
+&= \frac{\beta}{2} \sum (W_{t_{i+1}}^2 - W_{t_i}^2) - \frac{\beta}{2}\sum (W_{t_{i+1}} - W_{t_i})^2\\
+&= \frac{\beta}{2} W_t^2 - \frac{\beta}{2}t
+\end{align*}
+$$
 
 ::right::
 
-## 幾何Brown運動
+(3)
 
 $$
-dS_t=\mu S_t\,dt+\sigma S_t\,dW_t
+dX_t = \mu X_t\, dt + \sigma X_t\, dW_t
 $$
 
-金融で株価モデルとして使われる。相対変化率にノイズが入る形。
+これは$Y_t = \mathrm{log} X_t$と変数変換を行えば、伊藤の公式より
+
+$$
+\begin{align*}
+d Y_t &= (\mathrm{log} X_t)^\prime\, d X_t + \frac{1}{2}(\mathrm{log} X_t)^{\prime \prime}\, dX_t^2\\
+&= \mu \, dt + \sigma \, dW_t - \frac{1}{2}\sigma^2\, dW_t^2\\
+&= (\mu - \sigma^2 / 2) dt + \sigma\,dW_t
+\end{align*}
+$$
+
+したがって以下が成立
+
+$$
+X_t = \mathrm{exp}\left[(\mu - \sigma^2/2)t + \sigma W_t \right]
+$$
+
+※各問題で積分定数は省略している。←いい感じの注釈レイアウトで書きたい。disclaimerとかあれば用意して。
 
 ---
 layout: section
