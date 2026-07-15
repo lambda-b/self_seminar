@@ -1,4 +1,5 @@
 import { useDeferredValue, useMemo, useState } from "react";
+import Explanation from "./Explanation.mdx";
 import { buildStrategy, recommend } from "./strategy";
 
 type UtilityMode = "best" | "top3" | "topM" | "linear" | "custom";
@@ -352,62 +353,7 @@ const App = () => {
           </section>
         </section>
 
-        <section className="py-20">
-          <p className="text-xs font-bold tracking-[0.18em] text-orange-600">HOW IT WORKS</p>
-          <h2 className="mb-8 mt-2 text-4xl font-bold tracking-tight text-teal-950">
-            計算していること
-          </h2>
-          <div className="grid border-y border-slate-300 md:grid-cols-3">
-            {[
-              [
-                "01",
-                "順位を効用に変える",
-                "max E[u(Rτ)]",
-                "最終順位 r ごとの嬉しさを u(r) として、期待効用を最大化します。",
-              ],
-              [
-                "02",
-                "いま採用する価値",
-                "Gₖ,ₛ = E[u(Rₖ) | Sₖ=s]",
-                "暫定順位から最終順位の分布を推定し、採用時の期待効用を計算します。",
-              ],
-              [
-                "03",
-                "待つ価値と比較",
-                "Gₖ,ₛ ≥ Vₖ₊₁",
-                "後ろ向きに求めた継続価値以上なら採用する、という停止則です。",
-              ],
-            ].map(([number, title, formula, description]) => (
-              <article
-                className="border-b border-slate-300 p-7 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0"
-                key={number}
-              >
-                <span className="text-xs font-bold text-orange-600">{number}</span>
-                <h3 className="my-3 font-bold">{title}</h3>
-                <div className="font-serif text-lg italic text-teal-950">{formula}</div>
-                <p className="mt-4 text-sm leading-7 text-slate-600">{description}</p>
-              </article>
-            ))}
-          </div>
-          <details className="mt-7 border border-slate-200 bg-white p-6">
-            <summary className="cursor-pointer text-sm font-semibold text-teal-800">
-              数式の詳細
-            </summary>
-            <div className="mt-5 space-y-4 text-sm leading-7 text-slate-600">
-              <p>k人目の暫定順位がsであるとき、最終順位がrとなる条件付き確率は</p>
-              <div className="overflow-x-auto bg-slate-100 p-5 text-center font-serif text-base italic text-teal-950">
-                P(Rₖ=r | Sₖ=s) = (k/n) · C(r−1,s−1) C(n−r,k−s) / C(n−1,k−1)
-              </div>
-              <p>です。これを使って Gₖ,ₛ を求め、Vₙ から V₁ へ後ろ向きに計算します。</p>
-              <div className="overflow-x-auto bg-slate-100 p-5 text-center font-serif text-base italic text-teal-950">
-                Vₖ = (1/k) Σₛ₌₁…ₖ max {`{ Gₖ,ₛ, Vₖ₊₁ }`}
-              </div>
-              <p>
-                候補の到着順は全順列から一様で、観測できるのは到着済み候補間の相対順位だけ、と仮定しています。
-              </p>
-            </div>
-          </details>
-        </section>
+        <Explanation />
       </main>
       <footer className="bg-teal-950 px-6 py-7 text-center text-xs tracking-wider text-teal-100/60">
         確率論勉強会 · 一般化された秘書問題
