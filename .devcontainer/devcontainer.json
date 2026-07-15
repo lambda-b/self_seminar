@@ -33,6 +33,7 @@
         "Vue.volar",
         "antfu.slidev",
         "esbenp.prettier-vscode",
+        "unifiedjs.vscode-mdx",
         "biomejs.biome"
       ],
       "settings": {
