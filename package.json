@@ -5,9 +5,11 @@
   "type": "module",
   "packageManager": "pnpm@10.25.0",
   "scripts": {
-    "dev": "slidev slides.md --remote",
-    "build": "slidev build slides.md --base ./",
+    "dev": "concurrently --kill-others --names slides,simulator \"pnpm dev:slides\" \"pnpm --dir supplement/secretary-simulator dev\"",
+    "dev:slides": "slidev slides.md --remote",
+    "build": "slidev build slides.md --base ./ && pnpm --dir supplement/secretary-simulator build",
     "export": "slidev export slides.md --output dist/probability-seminar.pdf",
+    "test": "pnpm --dir supplement/secretary-simulator test",
     "format": "biome format --write .",
     "check": "biome check ."
   },
@@ -18,6 +20,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.2",
-    "@slidev/types": "52.16.0"
+    "@slidev/types": "52.16.0",
+    "concurrently": "^9.2.1",
+    "vite": "^8.1.4"
   }
 }

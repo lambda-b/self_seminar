@@ -24,6 +24,23 @@ pnpm dev
 ```
 
 既定では Slidev のローカルサーバーが起動します。
+秘書問題の補足シミュレータも同時に起動し、Slidev と同じオリジンの
+`/supplement/secretary-simulator/` からアクセスできます。
+
+## 補足アプリ
+
+一般化された秘書問題の最適戦略シミュレータは、独立した React/Vite
+プロジェクトとして次に配置しています。
+
+```text
+supplement/secretary-simulator/
+```
+
+スライド内のリンクからポップアップで開きます。単体で起動する場合:
+
+```bash
+pnpm --dir supplement/secretary-simulator dev
+```
 
 ## PDF出力
 
@@ -37,7 +54,7 @@ pnpm export
 dist/probability-seminar.pdf
 ```
 
-`main` に push すると GitHub Actions でもPDFを生成し、最新版を以下にコミットします。
+`main` に push すると GitHub Actions でもPDFを生成し、レポジトリ上では最新版のPDFを以下に配置してコミットします。
 
 ```text
 export/probability-seminar.pdf
