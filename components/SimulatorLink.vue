@@ -18,16 +18,17 @@ const openSimulator = (event: MouseEvent) => {
 </script>
 
 <template>
-  <a class="simulator-link" :href="simulatorUrl" target="_blank" rel="noopener" @click="openSimulator">
-    <span><small>INTERACTIVE SUPPLEMENT</small>最適戦略をシミュレーションする</span>
-    <b aria-hidden="true">↗</b>
+  <a
+    class="mt-4 flex items-center justify-between gap-3 rounded-sm border-l-4 border-orange-400 bg-[#176b87] px-4 py-3 text-white no-underline shadow-lg hover:bg-[#125a72] print:hidden"
+    :href="simulatorUrl"
+    target="_blank"
+    rel="noopener"
+    @click="openSimulator"
+  >
+    <span class="font-semibold">
+      <small class="mb-0.5 block text-[0.52rem] font-bold tracking-[0.12em] text-cyan-100">INTERACTIVE SUPPLEMENT</small>
+      最適戦略シミュレータ
+    </span>
+    <b class="text-xl font-normal" aria-hidden="true">↗</b>
   </a>
 </template>
-
-<style scoped>
-.simulator-link { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.4rem; padding: .8rem 1rem; color: #fff; background: #176b87; border-left: .3rem solid #e09455; border-radius: .15rem; text-decoration: none; box-shadow: 0 .35rem 1rem rgba(23, 107, 135, .16); }
-.simulator-link:hover { background: #125a72; }
-.simulator-link span { font-weight: 650; }
-.simulator-link small { display: block; margin-bottom: .05rem; color: #cbe6ed; font-size: .54rem; font-weight: 700; letter-spacing: .12em; }
-.simulator-link b { font-size: 1.35rem; font-weight: 400; }
-</style>

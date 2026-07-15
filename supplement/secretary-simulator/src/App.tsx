@@ -4,6 +4,10 @@ import { buildStrategy, recommend } from "./strategy";
 type UtilityMode = "best" | "top3" | "topM" | "linear" | "custom";
 
 const MAX_N = 200;
+const panelClass =
+  "rounded border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/5 md:p-9";
+const inputClass =
+  "w-full rounded border border-slate-300 bg-slate-50 px-3 py-2 text-slate-900 outline-none transition focus:border-teal-700 focus:ring-4 focus:ring-teal-700/10";
 
 const clampInteger = (value: number, minimum: number, maximum: number): number => {
   if (!Number.isFinite(value)) return minimum;
@@ -31,9 +35,28 @@ const makeUtilities = (mode: UtilityMode, n: number, topM: number, custom: strin
   });
 };
 
-const formatValue = (value: number): string => {
-  return new Intl.NumberFormat("ja-JP", { maximumFractionDigits: 6 }).format(value);
-};
+const formatValue = (value: number): string =>
+  new Intl.NumberFormat("ja-JP", { maximumFractionDigits: 6 }).format(value);
+
+const SectionHeading = ({
+  step,
+  title,
+  subtitle,
+}: {
+  step: string;
+  title: string;
+  subtitle: string;
+}) => (
+  <div className="mb-7 flex items-center gap-3">
+    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-orange-600 text-sm font-bold text-white">
+      {step}
+    </span>
+    <div>
+      <h2 className="text-xl font-bold tracking-tight text-slate-800">{title}</h2>
+      <p className="text-sm text-slate-500">{subtitle}</p>
+    </div>
+  </div>
+);
 
 const App = () => {
   const [n, setN] = useState(20);
@@ -51,8 +74,10 @@ const App = () => {
 
   const calculation = useMemo(() => {
     try {
-      const utilities = makeUtilities(deferredMode, deferredN, deferredTopM, deferredCustom);
-      return { model: buildStrategy(utilities), error: null };
+      return {
+        model: buildStrategy(makeUtilities(deferredMode, deferredN, deferredTopM, deferredCustom)),
+        error: null,
+      };
     } catch (error) {
       return {
         model: null,
@@ -75,74 +100,84 @@ const App = () => {
     setS((value) => Math.min(value, normalized));
   };
 
+  const presets: [UtilityMode, string, string][] = [
+    ["best", "最良だけ", "1位なら1"],
+    ["top3", "上位3人", "1〜3位なら1"],
+    ["topM", "上位 m 人", "m位まで同じ"],
+    ["linear", "順位点", "順位に応じて減少"],
+    ["custom", "カスタム", "効用を直接入力"],
+  ];
+
   return (
-    <div className="app-shell">
-      <header className="hero">
-        <div>
-          <p className="eyebrow">GENERALIZED SECRETARY PROBLEM</p>
-          <h1>最適戦略シミュレータ</h1>
-          <p className="lead">
-            選んだ候補の最終順位に効用を設定し、いま採用すべきかを後ろ向き計算で判定します。
-          </p>
-        </div>
-        <div className="hero-mark" aria-hidden="true">
-          τ*
+    <div className="min-h-screen bg-slate-100 font-sans text-slate-800">
+      <header className="relative overflow-hidden bg-teal-950 px-6 pb-16 pt-14 text-white md:px-[6vw]">
+        <div className="absolute -right-24 -top-48 size-[28rem] rounded-full border border-teal-600/50 shadow-[0_0_0_4rem_rgb(20_184_166_/_0.06),0_0_0_8rem_rgb(20_184_166_/_0.04)]" />
+        <div className="relative mx-auto flex max-w-7xl items-center justify-between">
+          <div>
+            <p className="text-xs font-bold tracking-[0.18em] text-orange-400">
+              GENERALIZED SECRETARY PROBLEM
+            </p>
+            <h1 className="mt-2 text-4xl font-bold tracking-tighter md:text-6xl">
+              最適戦略シミュレータ
+            </h1>
+            <p className="mt-4 max-w-2xl leading-7 text-teal-100/80">
+              選んだ候補の最終順位に効用を設定し、いま採用すべきかを後ろ向き計算で判定します。
+            </p>
+          </div>
+          <div className="relative hidden size-32 place-items-center rounded-full border border-teal-600 font-serif text-5xl italic text-orange-300 md:grid">
+            τ*
+          </div>
         </div>
       </header>
 
-      <main>
-        <section className="workspace" aria-label="シミュレータ">
-          <form className="panel controls" onSubmit={(event) => event.preventDefault()}>
-            <div className="section-heading">
-              <span className="step">1</span>
-              <div>
-                <h2>問題を設定</h2>
-                <p>候補数と順位の効用を入力</p>
-              </div>
-            </div>
-
-            <label className="field">
-              <span>候補者の総数 n</span>
+      <main className="relative mx-auto -mt-6 max-w-7xl px-4 pb-16 md:px-8">
+        <section className="grid items-start gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <form className={panelClass} onSubmit={(event) => event.preventDefault()}>
+            <SectionHeading step="1" title="問題を設定" subtitle="候補数と順位の効用を入力" />
+            <label className="mb-7 block text-sm font-semibold">
+              候補者の総数 n
               <input
+                className={`${inputClass} mt-2`}
                 type="number"
                 min="1"
                 max={MAX_N}
                 value={n}
                 onChange={(event) => updateN(Number(event.target.value))}
               />
-              <small>1〜{MAX_N}人</small>
+              <span className="mt-1 block text-xs font-normal text-slate-500">1〜{MAX_N}人</span>
             </label>
 
             <fieldset>
-              <legend>評価（効用）関数 u(r)</legend>
-              <div className="preset-grid">
-                {(
-                  [
-                    ["best", "最良だけ", "1位なら1"],
-                    ["top3", "上位3人", "1〜3位なら1"],
-                    ["topM", "上位 m 人", "m位まで同じ"],
-                    ["linear", "順位点", "順位に応じて減少"],
-                    ["custom", "カスタム", "効用を直接入力"],
-                  ] as [UtilityMode, string, string][]
-                ).map(([value, title, detail]) => (
-                  <label className={`preset ${mode === value ? "selected" : ""}`} key={value}>
+              <legend className="mb-3 text-sm font-semibold">評価（効用）関数 u(r)</legend>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {presets.map(([value, title, detail]) => (
+                  <label
+                    className={`relative cursor-pointer rounded border p-4 pl-10 transition ${
+                      mode === value
+                        ? "border-teal-700 bg-teal-50 shadow-[inset_3px_0_#0f766e]"
+                        : "border-slate-200 hover:border-teal-400"
+                    } ${value === "custom" ? "sm:col-span-2" : ""}`}
+                    key={value}
+                  >
                     <input
+                      className="absolute left-4 top-5 accent-teal-700"
                       type="radio"
                       name="mode"
                       checked={mode === value}
                       onChange={() => setMode(value)}
                     />
-                    <strong>{title}</strong>
-                    <small>{detail}</small>
+                    <strong className="block text-sm">{title}</strong>
+                    <small className="text-xs text-slate-500">{detail}</small>
                   </label>
                 ))}
               </div>
             </fieldset>
 
             {mode === "topM" && (
-              <label className="field">
-                <span>同じ効用を与える上位 m 人</span>
+              <label className="mt-6 block text-sm font-semibold">
+                同じ効用を与える上位 m 人
                 <input
+                  className={`${inputClass} mt-2`}
                   type="number"
                   min="1"
                   max={n}
@@ -153,82 +188,90 @@ const App = () => {
             )}
 
             {mode === "custom" && (
-              <label className="field">
-                <span>u(1), u(2), …, u(n)</span>
+              <label className="mt-6 block text-sm font-semibold">
+                u(1), u(2), …, u(n)
                 <textarea
+                  className={`${inputClass} mt-2 min-h-24`}
                   value={custom}
                   onChange={(event) => setCustom(event.target.value)}
                   rows={4}
                   spellCheck="false"
                 />
-                <small>1位から順に、カンマまたは空白区切りで {n} 個</small>
+                <span className="mt-1 block text-xs font-normal text-slate-500">
+                  1位から順に、カンマまたは空白区切りで {n} 個
+                </span>
               </label>
             )}
 
-            <div className="section-heading progress-heading">
-              <span className="step">2</span>
-              <div>
-                <h2>現在の状況</h2>
-                <p>いま見えている情報だけを入力</p>
+            <div className="mt-9 border-t border-slate-200 pt-8">
+              <SectionHeading step="2" title="現在の状況" subtitle="いま見えている情報だけを入力" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="text-sm font-semibold">
+                  現在 k 人目
+                  <input
+                    className={`${inputClass} mt-2`}
+                    type="number"
+                    min="1"
+                    max={n}
+                    value={safeK}
+                    onChange={(event) => {
+                      const value = clampInteger(Number(event.target.value), 1, n);
+                      setK(value);
+                      setS((rank) => Math.min(rank, value));
+                    }}
+                  />
+                </label>
+                <label className="text-sm font-semibold">
+                  暫定順位 s
+                  <input
+                    className={`${inputClass} mt-2`}
+                    type="number"
+                    min="1"
+                    max={safeK}
+                    value={safeS}
+                    onChange={(event) => setS(clampInteger(Number(event.target.value), 1, safeK))}
+                  />
+                </label>
               </div>
+              <p className="mt-3 text-xs leading-5 text-slate-500">
+                暫定順位は、現在の候補が「ここまでの {safeK} 人中で何位か」です。
+              </p>
             </div>
-            <div className="two-fields">
-              <label className="field">
-                <span>現在 k 人目</span>
-                <input
-                  type="number"
-                  min="1"
-                  max={n}
-                  value={safeK}
-                  onChange={(event) => {
-                    const value = clampInteger(Number(event.target.value), 1, n);
-                    setK(value);
-                    setS((rank) => Math.min(rank, value));
-                  }}
-                />
-              </label>
-              <label className="field">
-                <span>暫定順位 s</span>
-                <input
-                  type="number"
-                  min="1"
-                  max={safeK}
-                  value={safeS}
-                  onChange={(event) => setS(clampInteger(Number(event.target.value), 1, safeK))}
-                />
-              </label>
-            </div>
-            <p className="hint">
-              暫定順位は、現在の候補が「ここまでの {safeK} 人中で何位か」です。
-            </p>
           </form>
 
-          <section className="panel result-panel" aria-live="polite">
-            <div className="section-heading">
-              <span className="step">3</span>
-              <div>
-                <h2>最適な判断</h2>
-                <p>
-                  {safeK}人目・暫定{safeS}位の場合
-                </p>
-              </div>
-            </div>
-
+          <section className={`${panelClass} lg:sticky lg:top-4`} aria-live="polite">
+            <SectionHeading
+              step="3"
+              title="最適な判断"
+              subtitle={`${safeK}人目・暫定${safeS}位の場合`}
+            />
             {calculation.error ? (
-              <div className="error-box">{calculation.error}</div>
+              <div className="border-l-4 border-red-600 bg-red-50 p-5 text-red-800">
+                {calculation.error}
+              </div>
             ) : (
               result && (
-                <div className={isPending ? "pending" : ""}>
-                  <div className={`decision ${result.action}`}>
-                    <span className="decision-kicker">RECOMMENDATION</span>
-                    <strong>
+                <div className={isPending ? "opacity-50" : "transition-opacity"}>
+                  <div
+                    className={`border-l-4 p-6 ${
+                      result.action === "continue"
+                        ? "border-orange-600 bg-orange-50"
+                        : result.action === "forced"
+                          ? "border-slate-500 bg-slate-100"
+                          : "border-teal-700 bg-teal-50"
+                    }`}
+                  >
+                    <span className="text-[0.65rem] font-bold tracking-[0.16em] text-slate-500">
+                      RECOMMENDATION
+                    </span>
+                    <strong className="mt-2 block text-2xl font-bold tracking-tight md:text-3xl">
                       {result.action === "continue"
                         ? "見送って、次へ進む"
                         : result.action === "forced"
                           ? "最後なので採用する"
                           : "この候補を採用する"}
                     </strong>
-                    <p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
                       {result.action === "continue"
                         ? "待つ場合の期待効用の方が高い状態です。"
                         : result.action === "forced"
@@ -237,48 +280,68 @@ const App = () => {
                     </p>
                   </div>
 
-                  <div className="metric-grid">
-                    <div className="metric">
-                      <span>いま採用</span>
-                      <strong>{formatValue(result.stopValue)}</strong>
-                      <small>E[u(Rₖ) | Sₖ={safeS}]</small>
-                    </div>
-                    <div className="metric">
-                      <span>見送る</span>
-                      <strong>
-                        {result.continueValue === null ? "—" : formatValue(result.continueValue)}
-                      </strong>
-                      <small>Vₖ₊₁</small>
-                    </div>
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    {[
+                      ["いま採用", formatValue(result.stopValue), `E[u(Rₖ) | Sₖ=${safeS}]`],
+                      [
+                        "見送る",
+                        result.continueValue === null ? "—" : formatValue(result.continueValue),
+                        "Vₖ₊₁",
+                      ],
+                    ].map(([label, value, detail]) => (
+                      <div className="border border-slate-200 bg-slate-50 p-4" key={label}>
+                        <span className="block text-xs text-slate-500">{label}</span>
+                        <strong className="my-1 block text-2xl tabular-nums">{value}</strong>
+                        <small className="text-xs text-slate-500">{detail}</small>
+                      </div>
+                    ))}
                   </div>
 
-                  <div className="result-detail">
-                    <h3>この時点で採用する暫定順位</h3>
-                    <div className="rank-list">
+                  <div className="my-7">
+                    <h3 className="mb-3 text-sm font-bold">この時点で採用する暫定順位</h3>
+                    <div className="flex flex-wrap gap-2">
                       {result.acceptedRelativeRanks.map((rank) => (
-                        <span className={rank === safeS ? "current" : ""} key={rank}>
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            rank === safeS
+                              ? "bg-teal-700 text-white ring-4 ring-teal-700/15"
+                              : "bg-teal-50 text-teal-800"
+                          }`}
+                          key={rank}
+                        >
                           {rank}位
                         </span>
                       ))}
                     </div>
                     {result.acceptedRelativeRanks.length === 0 && (
-                      <p>この時点では、どの暫定順位でも見送ります。</p>
+                      <p className="text-sm text-slate-500">
+                        この時点では、どの暫定順位でも見送ります。
+                      </p>
                     )}
                   </div>
 
-                  <details>
-                    <summary>現在候補の最終順位の見込み</summary>
-                    <div className="probabilities">
+                  <details className="border-t border-slate-200 pt-5">
+                    <summary className="cursor-pointer text-sm font-semibold text-teal-800">
+                      現在候補の最終順位の見込み
+                    </summary>
+                    <div className="mt-4 max-h-64 space-y-2 overflow-auto pr-1">
                       {result.finalRankProbabilities
                         .map((probability, index) => ({ probability, rank: index + 1 }))
                         .filter(({ probability }) => probability > 1e-7)
                         .map(({ probability, rank }) => (
-                          <div className="probability-row" key={rank}>
+                          <div
+                            className="grid grid-cols-[2.5rem_1fr_3.5rem] items-center gap-2 text-xs"
+                            key={rank}
+                          >
                             <span>{rank}位</span>
-                            <div>
-                              <i style={{ width: `${probability * 100}%` }} />
-                            </div>
-                            <strong>{(probability * 100).toFixed(1)}%</strong>
+                            <progress
+                              className="h-1.5 w-full accent-orange-600"
+                              value={probability}
+                              max="1"
+                            />
+                            <strong className="text-right tabular-nums">
+                              {(probability * 100).toFixed(1)}%
+                            </strong>
                           </div>
                         ))}
                     </div>
@@ -289,48 +352,55 @@ const App = () => {
           </section>
         </section>
 
-        <section className="explanation">
-          <p className="eyebrow">HOW IT WORKS</p>
-          <h2>計算していること</h2>
-          <div className="explanation-grid">
-            <article>
-              <span>01</span>
-              <h3>順位を効用に変える</h3>
-              <div className="formula">
-                max E[u(R<sub>τ</sub>)]
-              </div>
-              <p>最終順位 r ごとの嬉しさを u(r) として、期待効用を最大化します。</p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>いま採用する価値</h3>
-              <div className="formula">
-                G<sub>k,s</sub> = E[u(R<sub>k</sub>) | S<sub>k</sub>=s]
-              </div>
-              <p>暫定順位から最終順位の分布を推定し、採用時の期待効用を計算します。</p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>待つ価値と比較</h3>
-              <div className="formula">
-                G<sub>k,s</sub> ≥ V<sub>k+1</sub>
-              </div>
-              <p>後ろ向きに求めた継続価値以上なら採用する、という停止則です。</p>
-            </article>
+        <section className="py-20">
+          <p className="text-xs font-bold tracking-[0.18em] text-orange-600">HOW IT WORKS</p>
+          <h2 className="mb-8 mt-2 text-4xl font-bold tracking-tight text-teal-950">
+            計算していること
+          </h2>
+          <div className="grid border-y border-slate-300 md:grid-cols-3">
+            {[
+              [
+                "01",
+                "順位を効用に変える",
+                "max E[u(Rτ)]",
+                "最終順位 r ごとの嬉しさを u(r) として、期待効用を最大化します。",
+              ],
+              [
+                "02",
+                "いま採用する価値",
+                "Gₖ,ₛ = E[u(Rₖ) | Sₖ=s]",
+                "暫定順位から最終順位の分布を推定し、採用時の期待効用を計算します。",
+              ],
+              [
+                "03",
+                "待つ価値と比較",
+                "Gₖ,ₛ ≥ Vₖ₊₁",
+                "後ろ向きに求めた継続価値以上なら採用する、という停止則です。",
+              ],
+            ].map(([number, title, formula, description]) => (
+              <article
+                className="border-b border-slate-300 p-7 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0"
+                key={number}
+              >
+                <span className="text-xs font-bold text-orange-600">{number}</span>
+                <h3 className="my-3 font-bold">{title}</h3>
+                <div className="font-serif text-lg italic text-teal-950">{formula}</div>
+                <p className="mt-4 text-sm leading-7 text-slate-600">{description}</p>
+              </article>
+            ))}
           </div>
-          <details className="math-detail">
-            <summary>数式の詳細</summary>
-            <div className="math-content">
+          <details className="mt-7 border border-slate-200 bg-white p-6">
+            <summary className="cursor-pointer text-sm font-semibold text-teal-800">
+              数式の詳細
+            </summary>
+            <div className="mt-5 space-y-4 text-sm leading-7 text-slate-600">
               <p>k人目の暫定順位がsであるとき、最終順位がrとなる条件付き確率は</p>
-              <div className="formula block">
+              <div className="overflow-x-auto bg-slate-100 p-5 text-center font-serif text-base italic text-teal-950">
                 P(Rₖ=r | Sₖ=s) = (k/n) · C(r−1,s−1) C(n−r,k−s) / C(n−1,k−1)
               </div>
-              <p>
-                です。これを使って G<sub>k,s</sub> を求め、V<sub>n</sub> から V<sub>1</sub>{" "}
-                へ後ろ向きに計算します。
-              </p>
-              <div className="formula block">
-                Vₖ = (1/k) Σ<sub>s=1…k</sub> max {"{"} G<sub>k,s</sub>, V<sub>k+1</sub> {"}"}
+              <p>です。これを使って Gₖ,ₛ を求め、Vₙ から V₁ へ後ろ向きに計算します。</p>
+              <div className="overflow-x-auto bg-slate-100 p-5 text-center font-serif text-base italic text-teal-950">
+                Vₖ = (1/k) Σₛ₌₁…ₖ max {`{ Gₖ,ₛ, Vₖ₊₁ }`}
               </div>
               <p>
                 候補の到着順は全順列から一様で、観測できるのは到着済み候補間の相対順位だけ、と仮定しています。
@@ -339,7 +409,9 @@ const App = () => {
           </details>
         </section>
       </main>
-      <footer>確率論勉強会 · 一般化された秘書問題</footer>
+      <footer className="bg-teal-950 px-6 py-7 text-center text-xs tracking-wider text-teal-100/60">
+        確率論勉強会 · 一般化された秘書問題
+      </footer>
     </div>
   );
 };
