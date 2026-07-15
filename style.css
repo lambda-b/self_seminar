@@ -47,6 +47,28 @@ th {
   color: #12343b;
 }
 
+.sde-compact-marker {
+  display: none;
+}
+
+.slidev-layout:has(.sde-compact-marker) {
+  font-size: 0.78rem;
+  line-height: 1.28;
+}
+
+.slidev-layout:has(.sde-compact-marker) h1 {
+  margin-bottom: 1.1rem;
+}
+
+.slidev-layout:has(.sde-compact-marker) .katex-display {
+  margin: 0.45rem 0;
+}
+
+.slidev-layout:has(.sde-compact-marker) aside {
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.8rem;
+}
+
 @media print {
   .slidev-layout {
     font-size: 0.98rem;

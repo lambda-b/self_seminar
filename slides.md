@@ -977,13 +977,8 @@ $$
 
 $$
 df(t,X_t)
-=
-\left(
-\partial_t f
-+b\,\partial_x f
-+\frac{1}{2}\sigma^2\,\partial_{xx}f
-\right)dt
-+\sigma\,\partial_x f\,dW_t
+=\partial_t f\,dt+\partial_x f\,dX_t
++\frac{1}{2}\partial_{xx}f\,(dX_t)^2
 $$
 
 と書ける。
@@ -1012,6 +1007,8 @@ layout: two-cols-header
 
 # 確率微分方程式を解く
 
+<span class="sde-compact-marker"></span>
+
 ::left::
 
 (1)
@@ -1028,6 +1025,22 @@ $$
 dX_t=\beta W_t\,dW_t
 \quad\Rightarrow\quad
 X_t=X_0+\frac{\beta}{2}(W_t^2-t)
+$$
+
+上記は実際に伊藤の公式を満たすことを確認できる。
+また、以下の計算でも得ることが可能。
+
+$$
+\begin{align*}
+X_t-X_0
+&=\beta \sum_i W_{t_i}(W_{t_{i+1}}-W_{t_i})\\
+&=\frac{\beta}{2}\sum_i
+(W_{t_i}+W_{t_{i+1}}+W_{t_i}-W_{t_{i+1}})
+(W_{t_{i+1}}-W_{t_i})\\
+&=\frac{\beta}{2}\sum_i(W_{t_{i+1}}^2-W_{t_i}^2)
+-\frac{\beta}{2}\sum_i(W_{t_{i+1}}-W_{t_i})^2\\
+&=\frac{\beta}{2}W_t^2-\frac{\beta}{2}t
+\end{align*}
 $$
 
 ::right::
