@@ -1010,11 +1010,11 @@ $$
 layout: two-cols-header
 ---
 
-# 確率微分方程式の例
+# 確率微分方程式を解く
 
 ::left::
 
-## Wiener過程だけの場合
+(1)
 
 $$
 dX_t=\alpha\,dW_t
@@ -1022,29 +1022,23 @@ dX_t=\alpha\,dW_t
 X_t=X_0+\alpha W_t
 $$
 
+(2)
+
 $$
 dX_t=\beta W_t\,dW_t
 \quad\Rightarrow\quad
 X_t=X_0+\frac{\beta}{2}(W_t^2-t)
 $$
 
-2つ目は伊藤の公式で
-
-$$
-d(W_t^2)=2W_t\,dW_t+dt
-$$
-
-となることから得られる。
-
 ::right::
 
-## 幾何Brown運動
+(3)
 
 $$
 dX_t=\mu X_t\,dt+\sigma X_t\,dW_t
 $$
 
-$Y_t=\log X_t$ とおくと、伊藤の公式より
+これは $Y_t=\log X_t$ と変数変換を行えば、伊藤の公式より
 
 $$
 \begin{align*}
@@ -1054,7 +1048,7 @@ dY_t
 \end{align*}
 $$
 
-したがって
+したがって以下が成立
 
 $$
 X_t
