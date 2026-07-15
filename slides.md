@@ -906,43 +906,59 @@ layout: two-cols-header
 
 ::left::
 
-## 確率積分とは
+## 左端評価で定義する
 
-確立過程の増分に対する確率積分は以下の通り右辺値の極限として表される。
-
-$$
-\int_0^T f(W_t)\,dW_t \simeq \sum_i f(W_{t_i}) (W_{t_{i+1}} - W_{t_i})
-$$
-
-このとき右辺にある通り、分割する区間の左端値で評価している点に注意。
-
-また、特にWiener過程は、形式的に以下の式が成立する。
+Wiener過程に沿う確率積分は、分割
+$0=t_0<t_1<\cdots<t_n=T$ に対して
 
 $$
-dW_t^2 = dt
+\int_0^T f(W_t)\,dW_t
+\approx
+\sum_i f(W_{t_i})\,(W_{t_{i+1}}-W_{t_i})
 $$
 
-これは、感覚的にはWiener過程は二項分布の極限であるから、十分小さい変動$dW_t$の2乗が確定値として分散値の$dt$になることは想像できる。
+の極限として定義する。
+
+このとき $f(W_{t_i})$ は時刻 $t_i$ までの情報で決まる値を使う。
+未来を見ないことが重要。
+
+特にWiener過程では、形式的に
+
+$$
+(dW_t)^2=dt
+$$
+
+という計算規則を使う。
+これは二項ランダムウォークの拡散極限で、微小な揺らぎの2乗が分散 $dt$ として残ることに対応する。
 
 ::right::
 
-::aside-box{title="補足: 左端評価について"}
+::aside-box{title="補足: 右端評価との違い"}
 
 通常のRiemann積分であれば区間内の任意の点による評価で値は変わらない。
 
-しかし、確率積分において、$W_t$の積分を考える際に、右端評価を行うと
+しかし、$W_t$ の積分で右端評価を行うと
 
 $$
 \begin{align*}
-\sum W_{t_{i+1}} (W_{t_{i+1}} - W_{i}) &= \sum(W_{t_{i+1}} - W_{t_i} + W_{t_i}) (W_{t_{i+1}} - W_{t_i})\\
-&= \sum(W_{t_{i+1}} - W_{t_i})^2 + \sum W_{t_i}(W_{t_{i+1}} - W_{t_i})\\
-&= T + \sum W_{t_i}(W_{t_{i+1}} - W_{t_i})
+\sum_i W_{t_{i+1}}\Delta W_i
+&=\sum_i(W_{t_i}+\Delta W_i)\Delta W_i\\
+&=\sum_i W_{t_i}\Delta W_i+\sum_i(\Delta W_i)^2\\
+&\to \int_0^T W_t\,dW_t+T
 \end{align*}
 $$
-となり、$T$の分だけ差分が生じる。(途中$dW_t^2 \sim dt$を用いている。)
 
-これは確率過程(ここでは特にWiener過程)が有界変動でないこと、すなわち$|dW_t/dt| \to \infty$となることに由来する。
+となり、左端評価と $T$ だけずれる。
 
+これはWiener過程の二次変分
+$$
+\sum_i(\Delta W_i)^2\to T
+$$
+に由来する。
+::
+
+::note
+Wiener過程の標本路は典型的に有界変動ではないため、通常のRiemann-Stieltjes積分としては扱えない。
 ::
 
 ---
@@ -961,8 +977,13 @@ $$
 
 $$
 df(t,X_t)
-=\partial_t f\,dt+\partial_x f\,dX_t
-+\frac{1}{2}\partial_{xx}f\,(dX_t)^2
+=
+\left(
+\partial_t f
++b\,\partial_x f
++\frac{1}{2}\sigma^2\,\partial_{xx}f
+\right)dt
++\sigma\,\partial_x f\,dW_t
 $$
 
 と書ける。
@@ -989,69 +1010,62 @@ $$
 layout: two-cols-header
 ---
 
-# 確率微分方程式を解く
+# 確率微分方程式の例
 
 ::left::
-(1)
-$$
 
-d X_t = \alpha \, dW_t
-
-\Rightarrow
-
-X_t = \alpha W_t
+## Wiener過程だけの場合
 
 $$
-
-(2)
-
+dX_t=\alpha\,dW_t
+\quad\Rightarrow\quad
+X_t=X_0+\alpha W_t
 $$
 
-d X_t = \beta W_t\, dW_t
-
-\Rightarrow
-
-X_t = \frac{\beta}{2}W_t^2 - \frac{\beta}{2}t
-
+$$
+dX_t=\beta W_t\,dW_t
+\quad\Rightarrow\quad
+X_t=X_0+\frac{\beta}{2}(W_t^2-t)
 $$
 
-上記は実際に伊藤の公式を満たすことを確認できる。
-また、以下の計算でも得ることが可能。
+2つ目は伊藤の公式で
 
 $$
-\begin{align*}
-X_t &= \beta \sum W_{t_i}(W_{t_{i+1}} - W_{t_i})\\
-&= \frac{\beta}{2} \sum (W_{t_i} + W_{t_{i+1}} + W_{t_i} - W_{t_{i+1}})(W_{t_{i+1}} - W_{t_i})\\
-&= \frac{\beta}{2} \sum (W_{t_{i+1}}^2 - W_{t_i}^2) - \frac{\beta}{2}\sum (W_{t_{i+1}} - W_{t_i})^2\\
-&= \frac{\beta}{2} W_t^2 - \frac{\beta}{2}t
-\end{align*}
+d(W_t^2)=2W_t\,dW_t+dt
 $$
+
+となることから得られる。
 
 ::right::
 
-(3)
+## 幾何Brown運動
 
 $$
-dX_t = \mu X_t\, dt + \sigma X_t\, dW_t
+dX_t=\mu X_t\,dt+\sigma X_t\,dW_t
 $$
 
-これは$Y_t = \mathrm{log} X_t$と変数変換を行えば、伊藤の公式より
+$Y_t=\log X_t$ とおくと、伊藤の公式より
 
 $$
 \begin{align*}
-d Y_t &= (\mathrm{log} X_t)^\prime\, d X_t + \frac{1}{2}(\mathrm{log} X_t)^{\prime \prime}\, dX_t^2\\
-&= \mu \, dt + \sigma \, dW_t - \frac{1}{2}\sigma^2\, dW_t^2\\
-&= (\mu - \sigma^2 / 2) dt + \sigma\,dW_t
+dY_t
+&=\frac{1}{X_t}\,dX_t-\frac{1}{2X_t^2}(dX_t)^2\\
+&=\left(\mu-\frac{1}{2}\sigma^2\right)dt+\sigma\,dW_t
 \end{align*}
 $$
 
-したがって以下が成立
+したがって
 
 $$
-X_t = \mathrm{exp}\left[(\mu - \sigma^2/2)t + \sigma W_t \right]
+X_t
+=X_0\exp\left[
+\left(\mu-\frac{1}{2}\sigma^2\right)t+\sigma W_t
+\right]
 $$
 
-※各問題で積分定数は省略している。←いい感じの注釈レイアウトで書きたい。disclaimerとかあれば用意して。
+::aside-box{title="補足: 初期値"}
+ここでは初期時刻を $0$ とし、初期値を $X_0$ として書いている。
+::
 
 ---
 layout: section
