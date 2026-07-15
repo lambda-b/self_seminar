@@ -1,11 +1,11 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-export default defineConfig({
-  base: "./",
+export default defineConfig(({ command }) => ({
+  base: command === "serve" ? "/supplement/secretary-simulator/" : "./",
   plugins: [react()],
   build: {
     outDir: "../../dist/supplement/secretary-simulator",
     emptyOutDir: false,
   },
-});
+}));

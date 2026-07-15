@@ -1,10 +1,8 @@
 <script setup lang="ts">
-const simulatorUrl = import.meta.env.DEV
-  ? "http://localhost:5174/"
-  : new URL("./supplement/secretary-simulator/", window.location.href).href;
+const simulatorUrl = new URL("./supplement/secretary-simulator/", window.location.href).href;
 
 // biome-ignore lint/correctness/noUnusedVariables: referenced by the Vue template
-function openSimulator(event: MouseEvent) {
+const openSimulator = (event: MouseEvent) => {
   const popup = window.open(
     simulatorUrl,
     "secretary-strategy-simulator",
@@ -16,7 +14,7 @@ function openSimulator(event: MouseEvent) {
     popup.opener = null;
     popup.focus();
   }
-}
+};
 </script>
 
 <template>

@@ -24,7 +24,8 @@ pnpm dev
 ```
 
 既定では Slidev のローカルサーバーが起動します。
-秘書問題の補足シミュレータも同時に `http://localhost:5174/` で起動します。
+秘書問題の補足シミュレータも同時に起動し、Slidev と同じオリジンの
+`/supplement/secretary-simulator/` からアクセスできます。
 
 ## 補足アプリ
 

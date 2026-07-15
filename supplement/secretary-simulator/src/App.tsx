@@ -5,12 +5,12 @@ type UtilityMode = "best" | "top3" | "topM" | "linear" | "custom";
 
 const MAX_N = 200;
 
-function clampInteger(value: number, minimum: number, maximum: number): number {
+const clampInteger = (value: number, minimum: number, maximum: number): number => {
   if (!Number.isFinite(value)) return minimum;
   return Math.min(maximum, Math.max(minimum, Math.round(value)));
-}
+};
 
-function makeUtilities(mode: UtilityMode, n: number, topM: number, custom: string): number[] {
+const makeUtilities = (mode: UtilityMode, n: number, topM: number, custom: string): number[] => {
   if (mode === "custom") {
     const values = custom
       .split(/[\s,、]+/)
@@ -29,13 +29,13 @@ function makeUtilities(mode: UtilityMode, n: number, topM: number, custom: strin
     if (mode === "topM") return rank <= topM ? 1 : 0;
     return n === 1 ? 1 : (n - rank) / (n - 1);
   });
-}
+};
 
-function formatValue(value: number): string {
+const formatValue = (value: number): string => {
   return new Intl.NumberFormat("ja-JP", { maximumFractionDigits: 6 }).format(value);
-}
+};
 
-function App() {
+const App = () => {
   const [n, setN] = useState(20);
   const [mode, setMode] = useState<UtilityMode>("top3");
   const [topM, setTopM] = useState(3);
@@ -342,6 +342,6 @@ function App() {
       <footer>確率論勉強会 · 一般化された秘書問題</footer>
     </div>
   );
-}
+};
 
 export default App;
