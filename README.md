@@ -74,7 +74,7 @@ https://lambda-b.github.io/self_seminar/
 
 ## 方針メモ
 
-Slidev / LaTeX の使い分けや、40-60分想定の構成方針は `docs/slidev_plan.md` にまとめています。
+Slidev / LaTeX の使い分けや、資料全体の構成方針は `docs/slidev_plan.md` にまとめています。
 
 ## Format / Check
 
