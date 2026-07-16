@@ -72,10 +72,6 @@ https://lambda-b.github.io/self_seminar/
 
 初回の Pages 設定手順は `docs/github_pages.md` を参照してください。
 
-## 方針メモ
-
-Slidev / LaTeX の使い分けや、資料全体の構成方針は `docs/slidev_plan.md` にまとめています。
-
 ## Format / Check
 
 Biome を使います。
