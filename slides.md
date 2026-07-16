@@ -1194,7 +1194,7 @@ $$
 V(t,S)=S\Phi(d_1)-Ke^{-r(T-t)}\Phi(d_2)
 $$
 
-<div class="text-[0.72rem] leading-tight">
+::small-text
 
 $$
 d_1=\frac{\log(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}},
@@ -1202,7 +1202,7 @@ d_1=\frac{\log(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}},
 d_2=d_1-\sigma\sqrt{T-t}
 $$
 
-</div>
+::
 
 ---
 layout: two-cols-header
