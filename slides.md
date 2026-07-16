@@ -770,14 +770,16 @@ $$
 
 ## 最初の待ち時間
 
-$$
-P(T_1>t)=P(N_t=0)=e^{-\lambda t}
-$$
-
-したがって
+最初のイベント発生時刻 $T_1$ の分布関数は
 
 $$
-T_1\sim \mathrm{Exp}(\lambda)
+F_{T_1}(t)=P(T_1\le t)=P(N_t\ge 1)=1-e^{-\lambda t}
+$$
+
+したがって、これは指数分布の分布関数になるので
+
+$$
+T_1 \sim \mathrm{Exp}(\lambda)
 $$
 
 ::right::
@@ -796,9 +798,9 @@ $$
 
 ---
 
-# Brown運動
+# Wiener過程
 
-1次元Brown運動、またはWiener過程 $(W_t)_{t\ge0}$ は、次を満たす連続確率過程。
+Wiener過程、または1次元Brown運動 $(W_t)_{t\ge0}$ は、次を満たす連続確率過程。
 
 1. $W_0=0$ a.s.
 2. 標本路 $t\mapsto W_t(\omega)$ は連続
@@ -857,8 +859,6 @@ Wiener過程では $E[W_t\mid\mathcal{F}_s]=W_s$。
 どちらもMarkov性を持つ代表的な確率過程。
 
 ---
-layout: two-cols-header
----
 
 # Martingale
 
@@ -876,27 +876,11 @@ $$
 
 を満たすこと。
 
-::left::
-
 ## Markov性との違い
 
 Markov性は「未来の分布が現在で決まる」という性質。
 
 Martingaleは「未来の条件付き期待値が現在値と一致する」という性質。
-
-::right::
-
-::example-box{title="例"}
-独立な平均0の増分を足した
-
-$$
-M_n=\sum_{k=1}^n \xi_k
-$$
-
-は離散時間Martingale。
-
-Wiener過程 $(W_t)$ もMartingale。
-::
 
 ---
 layout: two-cols-header
@@ -1214,60 +1198,6 @@ $$
 
 ---
 
-# 何が確率論とつながるか
-
-Black-Scholesは、次の概念が一気につながる例。
-
-- Brown運動
-- 確率微分方程式
-- 伊藤の公式
-- Markov性
-- 偏微分方程式
-- 条件付き期待値
-- Martingale
-- 無裁定
-
-::note
-この勉強会では厳密な金融数学の完成より、「確率過程が解析と応用へ接続する」ことを見せる位置づけにする。
-::
-
----
-layout: two-cols-header
----
-
-# 金融工学とMartingale
-
-無裁定な価格づけでは、割引後の価格過程をMartingaleとして扱う見方が現れる。
-
-$$
-E[e^{-rt}S_t\mid\mathcal{F}_s]=e^{-rs}S_s
-\quad(s\le t)
-$$
-
-ここでは測度の取り替えなどの詳細には立ち入らない。
-
-::left::
-
-## 価格づけの見方
-
-記号的には、将来ペイオフを割り引いた期待値が現在価格になる。
-
-$$
-V_t=E[e^{-r(T-t)}H\mid\mathcal{F}_t]
-$$
-
-::right::
-
-## ここで効く概念
-
-- 条件付き期待値
-- filtration
-- Martingale
-- 伊藤の公式
-- 無裁定
-
----
-
 # 最適戦略
 
 確率論では、ランダムな状況のもとで最適な意思決定を考える。
@@ -1278,10 +1208,6 @@ $$
 - 秘書問題
 - 停止時刻
 - 動的計画法
-
-::note
-「事前に全部見られない」「途中で止める必要がある」という状況では、情報の増え方が本質になる。
-::
 
 ---
 
