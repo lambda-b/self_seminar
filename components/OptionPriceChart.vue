@@ -55,9 +55,9 @@
         :stroke="series.color"
       />
 
-      <g class="legend" :transform="`translate(${plotRight - 132}, ${plotTop + 8})`">
+      <g class="legend" :transform="`translate(${plotRight - 112}, ${plotBottom - 82})`">
         <g v-for="(series, index) in seriesPaths" :key="`legend-${series.label}`" :transform="`translate(0, ${index * 24})`">
-          <rect class="legend-swatch" x="0" y="-7" width="26" height="8" :fill="series.color" />
+          <line class="legend-line" x1="0" x2="24" y1="0" y2="0" :stroke="series.color" />
           <text x="36" y="5">{{ series.label }}</text>
         </g>
       </g>
@@ -70,8 +70,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-
 const plotLeft = 72;
 const plotRight = 704;
 const plotTop = 28;
@@ -124,19 +122,17 @@ const callPrice = (s: number, tau: number) => {
 };
 
 // biome-ignore lint/correctness/noUnusedVariables: referenced by the Vue template
-const seriesPaths = computed(() =>
-  curves.map((curve) => {
-    const points = Array.from({ length: 96 }, (_, index) => {
-      const s = minS + ((maxS - minS) * index) / 95;
-      return `${index === 0 ? "M" : "L"} ${xScale(s).toFixed(1)} ${yScale(callPrice(s, curve.tau)).toFixed(1)}`;
-    });
+const seriesPaths = curves.map((curve) => {
+  const points = Array.from({ length: 96 }, (_, index) => {
+    const s = minS + ((maxS - minS) * index) / 95;
+    return `${index === 0 ? "M" : "L"} ${xScale(s).toFixed(1)} ${yScale(callPrice(s, curve.tau)).toFixed(1)}`;
+  });
 
-    return {
-      ...curve,
-      path: points.join(" "),
-    };
-  }),
-);
+  return {
+    ...curve,
+    path: points.join(" "),
+  };
+});
 </script>
 
 <style scoped>
@@ -200,7 +196,8 @@ svg {
   stroke-width: 3.5;
 }
 
-.legend-swatch {
-  rx: 2;
+.legend-line {
+  stroke-linecap: round;
+  stroke-width: 2.2;
 }
 </style>
