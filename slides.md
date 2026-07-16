@@ -1140,28 +1140,66 @@ $S_T\le K$ なら、権利を行使しない。
 損失は最初に払うプレミアムに限られる。
 
 ---
-
+layout: two-cols-header
+---
 # オプション価格
 
-ヨーロピアン・コールオプションの満期 $T$ でのペイオフは
+::left::
+
+オプション価格の算定方法について考える。
+
+時刻 $t$ のオプション価格 $V_t$ が安全資産 $B_t$ と原資産 $S_t$ の組み合わせで表現可能とする。(複製ポートフォリオという)
 
 $$
-(S_T-K)^+
+V_t = p_t B_t + q_t S_t
 $$
 
-ここで $K$ は権利行使価格。
+このとき、オプション価格の変動は以下となる。
 
-Black-Scholes理論では、無裁定の考え方から価格関数 $V(t,S)$ が満たす方程式を導く。
+$$
+dV_t = p_t \, dB_t + q_t \, dS_t + \underline{B_t \, dp_t + S_t \, dq_t}
+$$
+
+特に、新たな資金の流入・流出がないことを仮定すると下線部については各資産のポジションの組み替えを意味するから0となる。
+
+ここで、安全資産 $B_t$ はリスクフリーレート $r$ を用いて $B_t=B_0e^{rt}$、$S_t$ がBlack-Scholes過程に準ずるとすると
+
+$$
+dV_t = \left(
+  r p_t B_t + \mu q_t S_t
+\right)dt
++
+\sigma q_t S_t \, dW_t
+$$
+
+::right::
+
+一方、$V_t$ を原資産 $S_t$ による確率過程と解釈して $V_t=V(t,S_t)$ と扱うと伊藤の公式より
+
+$$
+dV_t = \left(
+  \partial_t V_t + \mu S_t \partial_S V_t + \frac{\sigma^2}{2}S_t^2 \partial_{SS} V_t
+\right) dt
++ \sigma S_t \partial_S V_t\, dW_t
+$$
+
+これら2式の$dt$項、$dW_t$項の比較および$V_t = p_t B_t + q_t S_t$を利用して整理すると
 
 $$
 \partial_t V+\frac{1}{2}\sigma^2S^2\partial_{SS}V
 +rS\partial_SV-rV=0
 $$
 
-終端条件:
+標準正規分布の分布関数を $\Phi$ として、終端条件 $V(T,S)=(S-K)^+$ のもとで解くと
 
 $$
-V(T,S)=(S-K)^+
+\begin{gathered}
+V(t,S)=S\Phi(d_1)-Ke^{-r(T-t)}\Phi(d_2)
+\\
+d_1=\frac{\log(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}},
+\quad
+d_2=d_1-\sigma\sqrt{T-t}
+\end{gathered}
 $$
 
 ---
