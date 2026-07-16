@@ -1,21 +1,41 @@
 import { useDeferredValue, useMemo, useState } from "react";
 import Explanation from "@/Explanation.mdx";
 import { buildStrategy, recommend } from "@/strategy";
+import { compileUtilityExpression } from "@/utilityExpression";
 
-type UtilityMode = "best" | "top3" | "topM" | "linear" | "custom";
+type UtilityMode = "best" | "topM" | "linear" | "custom" | "formula";
 
 const MAX_N = 200;
 const panelClass =
   "rounded border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/5 md:p-9";
-const inputClass =
+const baseInputClass =
   "w-full rounded border border-slate-300 bg-slate-50 px-3 py-2 text-slate-900 outline-none transition focus:border-teal-700 focus:ring-4 focus:ring-teal-700/10";
 
-const clampInteger = (value: number, minimum: number, maximum: number): number => {
-  if (!Number.isFinite(value)) return minimum;
-  return Math.min(maximum, Math.max(minimum, Math.round(value)));
+const inputClass = (error: string | null): string =>
+  `${baseInputClass} ${error ? "border-red-500 bg-red-50 focus:border-red-600 focus:ring-red-600/10" : ""}`;
+
+const parseIntegerInput = (
+  input: string,
+  minimum: number,
+  maximum: number,
+  label: string,
+): { value: number | null; error: string | null } => {
+  if (!input.trim()) return { value: null, error: `${label}を入力してください。` };
+  const value = Number(input);
+  if (!Number.isInteger(value)) return { value: null, error: `${label}は整数で入力してください。` };
+  if (value < minimum || value > maximum) {
+    return { value: null, error: `${minimum}〜${maximum}の範囲で入力してください。` };
+  }
+  return { value, error: null };
 };
 
-const makeUtilities = (mode: UtilityMode, n: number, topM: number, custom: string): number[] => {
+const makeUtilities = (
+  mode: UtilityMode,
+  n: number,
+  topM: number,
+  custom: string,
+  formula: string,
+): number[] => {
   if (mode === "custom") {
     const values = custom
       .split(/[\s,、]+/)
@@ -27,10 +47,14 @@ const makeUtilities = (mode: UtilityMode, n: number, topM: number, custom: strin
     return values;
   }
 
+  if (mode === "formula") {
+    const utility = compileUtilityExpression(formula);
+    return Array.from({ length: n }, (_, index) => utility(index + 1));
+  }
+
   return Array.from({ length: n }, (_, index) => {
     const rank = index + 1;
     if (mode === "best") return rank === 1 ? 1 : 0;
-    if (mode === "top3") return rank <= Math.min(3, n) ? 1 : 0;
     if (mode === "topM") return rank <= topM ? 1 : 0;
     return n === 1 ? 1 : (n - rank) / (n - 1);
   });
@@ -60,23 +84,46 @@ const SectionHeading = ({
 );
 
 const App = () => {
-  const [n, setN] = useState(20);
-  const [mode, setMode] = useState<UtilityMode>("top3");
-  const [topM, setTopM] = useState(3);
+  const [nInput, setNInput] = useState("20");
+  const [mode, setMode] = useState<UtilityMode>("topM");
+  const [topMInput, setTopMInput] = useState("3");
   const [custom, setCustom] = useState(
     "1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0",
   );
-  const [k, setK] = useState(8);
-  const [s, setS] = useState(1);
-  const deferredN = useDeferredValue(n);
+  const [formula, setFormula] = useState("1 / x");
+  const [kInput, setKInput] = useState("8");
+  const [sInput, setSInput] = useState("1");
+  const deferredNInput = useDeferredValue(nInput);
   const deferredMode = useDeferredValue(mode);
-  const deferredTopM = useDeferredValue(topM);
+  const deferredTopMInput = useDeferredValue(topMInput);
   const deferredCustom = useDeferredValue(custom);
+  const deferredFormula = useDeferredValue(formula);
+
+  const nState = parseIntegerInput(nInput, 1, MAX_N, "候補者の総数 n");
+  const n = nState.value;
+  const topMState = parseIntegerInput(topMInput, 1, n ?? MAX_N, "上位 m 人");
+  const kState = parseIntegerInput(kInput, 1, n ?? MAX_N, "現在の人数 k");
+  const sState = parseIntegerInput(sInput, 1, kState.value ?? n ?? MAX_N, "暫定順位 s");
 
   const calculation = useMemo(() => {
     try {
+      const deferredN = parseIntegerInput(deferredNInput, 1, MAX_N, "候補者の総数 n");
+      if (deferredN.error || deferredN.value === null)
+        throw new Error(deferredN.error ?? "nを入力してください。");
+      const deferredTopM = parseIntegerInput(deferredTopMInput, 1, deferredN.value, "上位 m 人");
+      if (deferredMode === "topM" && (deferredTopM.error || deferredTopM.value === null)) {
+        throw new Error(deferredTopM.error ?? "mを入力してください。");
+      }
       return {
-        model: buildStrategy(makeUtilities(deferredMode, deferredN, deferredTopM, deferredCustom)),
+        model: buildStrategy(
+          makeUtilities(
+            deferredMode,
+            deferredN.value,
+            deferredTopM.value ?? 1,
+            deferredCustom,
+            deferredFormula,
+          ),
+        ),
         error: null,
       };
     } catch (error) {
@@ -85,28 +132,30 @@ const App = () => {
         error: error instanceof Error ? error.message : "入力を確認してください。",
       };
     }
-  }, [deferredCustom, deferredMode, deferredN, deferredTopM]);
+  }, [deferredCustom, deferredFormula, deferredMode, deferredNInput, deferredTopMInput]);
 
-  const safeK = clampInteger(k, 1, n);
-  const safeS = clampInteger(s, 1, safeK);
-  const result = calculation.model ? recommend(calculation.model, safeK, safeS) : null;
   const isPending =
-    n !== deferredN || mode !== deferredMode || topM !== deferredTopM || custom !== deferredCustom;
-
-  const updateN = (next: number) => {
-    const normalized = clampInteger(next, 1, MAX_N);
-    setN(normalized);
-    setTopM((value) => Math.min(value, normalized));
-    setK((value) => Math.min(value, normalized));
-    setS((value) => Math.min(value, normalized));
-  };
+    nInput !== deferredNInput ||
+    mode !== deferredMode ||
+    topMInput !== deferredTopMInput ||
+    custom !== deferredCustom ||
+    formula !== deferredFormula;
+  const progressError = kState.error ?? sState.error;
+  const result =
+    !isPending &&
+    calculation.model &&
+    kState.value !== null &&
+    sState.value !== null &&
+    !progressError
+      ? recommend(calculation.model, kState.value, sState.value)
+      : null;
 
   const presets: [UtilityMode, string, string][] = [
     ["best", "最良だけ", "1位なら1"],
-    ["top3", "上位3人", "1〜3位なら1"],
     ["topM", "上位 m 人", "m位まで同じ"],
     ["linear", "順位点", "順位に応じて減少"],
-    ["custom", "カスタム", "効用を直接入力"],
+    ["custom", "値を直接入力", "順位ごとの効用を列挙"],
+    ["formula", "式で入力", "xを最終順位として計算"],
   ];
 
   return (
@@ -138,18 +187,29 @@ const App = () => {
             <label className="mb-7 block text-sm font-semibold">
               候補者の総数 n
               <input
-                className={`${inputClass} mt-2`}
+                className={`${inputClass(nState.error)} mt-2`}
                 type="number"
                 min="1"
                 max={MAX_N}
-                value={n}
-                onChange={(event) => updateN(Number(event.target.value))}
+                value={nInput}
+                aria-invalid={Boolean(nState.error)}
+                onChange={(event) => setNInput(event.target.value)}
               />
-              <span className="mt-1 block text-xs font-normal text-slate-500">1〜{MAX_N}人</span>
+              <span
+                className={`mt-1 block text-xs font-normal ${nState.error ? "text-red-600" : "text-slate-500"}`}
+              >
+                {nState.error ?? `1〜${MAX_N}人`}
+              </span>
             </label>
 
             <fieldset>
               <legend className="mb-3 text-sm font-semibold">評価（効用）関数 u(r)</legend>
+              <div className="mb-4 border-l-4 border-teal-600 bg-teal-50 px-4 py-3 text-xs leading-5 text-teal-900">
+                <strong className="mr-2">推奨条件</strong>
+                順位が良いほど効用が高くなるよう、正の単調非増加
+                <span className="mx-1 font-mono">u(1) ≥ u(2) ≥ … ≥ u(n) &gt; 0</span>
+                に設定するのが自然です。計算上は、有限値であれば負の値や増加関数も利用できます。
+              </div>
               <div className="grid gap-2 sm:grid-cols-2">
                 {presets.map(([value, title, detail]) => (
                   <label
@@ -157,7 +217,7 @@ const App = () => {
                       mode === value
                         ? "border-teal-700 bg-teal-50 shadow-[inset_3px_0_#0f766e]"
                         : "border-slate-200 hover:border-teal-400"
-                    } ${value === "custom" ? "sm:col-span-2" : ""}`}
+                    }`}
                     key={value}
                   >
                     <input
@@ -178,13 +238,19 @@ const App = () => {
               <label className="mt-6 block text-sm font-semibold">
                 同じ効用を与える上位 m 人
                 <input
-                  className={`${inputClass} mt-2`}
+                  className={`${inputClass(topMState.error)} mt-2`}
                   type="number"
                   min="1"
-                  max={n}
-                  value={topM}
-                  onChange={(event) => setTopM(clampInteger(Number(event.target.value), 1, n))}
+                  max={n ?? MAX_N}
+                  value={topMInput}
+                  aria-invalid={Boolean(topMState.error)}
+                  onChange={(event) => setTopMInput(event.target.value)}
                 />
+                {topMState.error && (
+                  <span className="mt-1 block text-xs font-normal text-red-600">
+                    {topMState.error}
+                  </span>
+                )}
               </label>
             )}
 
@@ -192,14 +258,32 @@ const App = () => {
               <label className="mt-6 block text-sm font-semibold">
                 u(1), u(2), …, u(n)
                 <textarea
-                  className={`${inputClass} mt-2 min-h-24`}
+                  className={`${inputClass(null)} mt-2 min-h-24`}
                   value={custom}
                   onChange={(event) => setCustom(event.target.value)}
                   rows={4}
                   spellCheck="false"
                 />
                 <span className="mt-1 block text-xs font-normal text-slate-500">
-                  1位から順に、カンマまたは空白区切りで {n} 個
+                  1位から順に、カンマまたは空白区切りで {n ?? "n"} 個
+                </span>
+              </label>
+            )}
+
+            {mode === "formula" && (
+              <label className="mt-6 block text-sm font-semibold">
+                効用関数 u(x)
+                <input
+                  className={`${inputClass(calculation.error)} mt-2 font-mono`}
+                  type="text"
+                  value={formula}
+                  aria-invalid={Boolean(calculation.error)}
+                  onChange={(event) => setFormula(event.target.value)}
+                  placeholder="例: 1 / x"
+                  spellCheck="false"
+                />
+                <span className="mt-1 block text-xs font-normal text-slate-500">
+                  xは最終順位。利用可能: exp, log, +, -, *, /, 括弧
                 </span>
               </label>
             )}
@@ -210,32 +294,40 @@ const App = () => {
                 <label className="text-sm font-semibold">
                   現在 k 人目
                   <input
-                    className={`${inputClass} mt-2`}
+                    className={`${inputClass(kState.error)} mt-2`}
                     type="number"
                     min="1"
-                    max={n}
-                    value={safeK}
-                    onChange={(event) => {
-                      const value = clampInteger(Number(event.target.value), 1, n);
-                      setK(value);
-                      setS((rank) => Math.min(rank, value));
-                    }}
+                    max={n ?? MAX_N}
+                    value={kInput}
+                    aria-invalid={Boolean(kState.error)}
+                    onChange={(event) => setKInput(event.target.value)}
                   />
+                  {kState.error && (
+                    <span className="mt-1 block text-xs font-normal text-red-600">
+                      {kState.error}
+                    </span>
+                  )}
                 </label>
                 <label className="text-sm font-semibold">
                   暫定順位 s
                   <input
-                    className={`${inputClass} mt-2`}
+                    className={`${inputClass(sState.error)} mt-2`}
                     type="number"
                     min="1"
-                    max={safeK}
-                    value={safeS}
-                    onChange={(event) => setS(clampInteger(Number(event.target.value), 1, safeK))}
+                    max={kState.value ?? n ?? MAX_N}
+                    value={sInput}
+                    aria-invalid={Boolean(sState.error)}
+                    onChange={(event) => setSInput(event.target.value)}
                   />
+                  {sState.error && (
+                    <span className="mt-1 block text-xs font-normal text-red-600">
+                      {sState.error}
+                    </span>
+                  )}
                 </label>
               </div>
               <p className="mt-3 text-xs leading-5 text-slate-500">
-                暫定順位は、現在の候補が「ここまでの {safeK} 人中で何位か」です。
+                暫定順位は、現在の候補が「ここまでの {kState.value ?? "k"} 人中で何位か」です。
               </p>
             </div>
           </form>
@@ -244,9 +336,17 @@ const App = () => {
             <SectionHeading
               step="3"
               title="最適な判断"
-              subtitle={`${safeK}人目・暫定${safeS}位の場合`}
+              subtitle={
+                kState.value !== null && sState.value !== null
+                  ? `${kState.value}人目・暫定${sState.value}位の場合`
+                  : "現在の状況を入力してください"
+              }
             />
-            {calculation.error ? (
+            {progressError ? (
+              <div className="border-l-4 border-red-600 bg-red-50 p-5 text-red-800">
+                入力が完了すると、ここに最適な判断を表示します。
+              </div>
+            ) : calculation.error ? (
               <div className="border-l-4 border-red-600 bg-red-50 p-5 text-red-800">
                 {calculation.error}
               </div>
@@ -283,7 +383,7 @@ const App = () => {
 
                   <div className="mt-4 grid grid-cols-2 gap-3">
                     {[
-                      ["いま採用", formatValue(result.stopValue), `E[u(Rₖ) | Sₖ=${safeS}]`],
+                      ["いま採用", formatValue(result.stopValue), `E[u(Rₖ) | Sₖ=${sState.value}]`],
                       [
                         "見送る",
                         result.continueValue === null ? "—" : formatValue(result.continueValue),
@@ -304,7 +404,7 @@ const App = () => {
                       {result.acceptedRelativeRanks.map((rank) => (
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                            rank === safeS
+                            rank === sState.value
                               ? "bg-teal-700 text-white ring-4 ring-teal-700/15"
                               : "bg-teal-50 text-teal-800"
                           }`}
