@@ -1082,23 +1082,30 @@ layout: section
 
 株価 $S_t$ を幾何Brown運動でモデル化する。
 
-現実の確率測度 $P$ では
-
 $$
-dS_t=\mu S_t\,dt+\sigma S_t\,dW_t^P
+dS_t=\mu S_t\,dt+\sigma S_t\,dW_t
 $$
 
-と書く。一方、価格づけではリスク中立測度 $Q$ の下で
+形式的には、微小な投資リターン $dS_t/S_t$ が正規分布するモデルと見られる。
 
 $$
-dS_t=rS_t\,dt+\sigma S_t\,dW_t^Q
+\frac{dS_t}{S_t}\sim N(\mu\,dt,\sigma^2\,dt)
 $$
 
-と表す。
+このとき前述の確率微分方程式より
 
-::note
-$\mu$ は現実世界でのドリフト。無裁定価格づけでは、割引後価格 $e^{-rt}S_t$ が $Q$ の下でMartingaleになるようにドリフトが $r$ へ置き換わる。
-::
+$$
+S_t
+=S_0\exp\left[
+\left(\mu-\frac{\sigma^2}{2}\right)t+\sigma W_t
+\right]
+$$
+
+このとき $S_t$ の期待値は
+
+$$
+E[S_t]=S_0e^{\mu t}
+$$
 
 ---
 layout: two-cols-header
@@ -1169,13 +1176,13 @@ Black-Scholes方程式は、オプション価格を決めるPDE。
 
 ## 確率論側
 
-リスク中立測度の下で
+株価を確率過程としてモデル化し、満期ペイオフ
 
 $$
-V(t,S)=e^{-r(T-t)}E^Q[(S_T-K)^+\mid S_t=S]
+(S_T-K)^+
 $$
 
-という条件付き期待値で価格を表す。
+を現在時点の価格へ結びつける。
 
 ::right::
 
@@ -1205,7 +1212,7 @@ Black-Scholesは、次の概念が一気につながる例。
 - 偏微分方程式
 - 条件付き期待値
 - Martingale
-- リスク中立測度
+- 無裁定
 
 ::note
 この勉強会では厳密な金融数学の完成より、「確率過程が解析と応用へ接続する」ことを見せる位置づけにする。
@@ -1217,21 +1224,23 @@ layout: two-cols-header
 
 # 金融工学とMartingale
 
-リスク中立測度 $Q$ の下では、割引後の価格過程がMartingaleになる。
+無裁定な価格づけでは、割引後の価格過程をMartingaleとして扱う見方が現れる。
 
 $$
-E^Q[e^{-rt}S_t\mid\mathcal{F}_s]=e^{-rs}S_s
+E[e^{-rt}S_t\mid\mathcal{F}_s]=e^{-rs}S_s
 \quad(s\le t)
 $$
+
+ここでは測度の取り替えなどの詳細には立ち入らない。
 
 ::left::
 
 ## 価格づけの見方
 
-将来ペイオフを割り引いた期待値が現在価格になる。
+記号的には、将来ペイオフを割り引いた期待値が現在価格になる。
 
 $$
-V_t=E^Q[e^{-r(T-t)}H\mid\mathcal{F}_t]
+V_t=E[e^{-r(T-t)}H\mid\mathcal{F}_t]
 $$
 
 ::right::
