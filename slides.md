@@ -1206,39 +1206,11 @@ $$
 ::
 
 ---
-layout: two-cols-header
----
 
-# Black-Scholesの見方
+# オプション価格のグラフ
 
-Black-Scholes方程式は、オプション価格を決めるPDE。
-
-::left::
-
-## 確率論側
-
-株価を確率過程としてモデル化し、満期ペイオフ
-
-$$
-(S_T-K)^+
-$$
-
-を現在時点の価格へ結びつける。
-
-::right::
-
-## 解析側
-
-同じ価格関数 $V(t,S)$ は
-
-$$
-\partial_t V+\frac12\sigma^2S^2\partial_{SS}V
-+rS\partial_SV-rV=0
-$$
-
-を満たす。
-
-確率過程とPDEが接続する。
+::option-price-chart
+::
 
 ---
 
