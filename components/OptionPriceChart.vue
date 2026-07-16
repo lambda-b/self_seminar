@@ -92,15 +92,15 @@ const layout = {
   legendTransform: "translate(588, 252)",
   timeOrderY: 404,
 } as const;
-const minS = 70;
-const maxS = 130;
+const minS = 75;
+const maxS = 125;
 const maxPrice = 30;
 const strike = 100;
 const rate = 0.02;
 const volatility = 0.25;
 
 // biome-ignore lint/correctness/noUnusedVariables: referenced by the Vue template
-const xTicks = [70, 85, 100, 115, 130];
+const xTicks = [75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125];
 // biome-ignore lint/correctness/noUnusedVariables: referenced by the Vue template
 const yTicks = [0, 10, 20, 30];
 
