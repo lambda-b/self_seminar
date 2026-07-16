@@ -1191,14 +1191,18 @@ $$
 これを、終端条件 $V(T,S)=(S-K)^+$ のもとで解くと( $\Phi$:標準正規分布の分布関数)
 
 $$
-\begin{gathered}
 V(t,S)=S\Phi(d_1)-Ke^{-r(T-t)}\Phi(d_2)
-\\
+$$
+
+<div class="text-[0.72rem] leading-tight">
+
+$$
 d_1=\frac{\log(S/K)+(r+\sigma^2/2)(T-t)}{\sigma\sqrt{T-t}},
 \quad
 d_2=d_1-\sigma\sqrt{T-t}
-\end{gathered}
 $$
+
+</div>
 
 ---
 layout: two-cols-header
