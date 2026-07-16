@@ -57,7 +57,7 @@
 
       <g class="legend" :transform="`translate(${plotRight - 132}, ${plotTop + 8})`">
         <g v-for="(series, index) in seriesPaths" :key="`legend-${series.label}`" :transform="`translate(0, ${index * 24})`">
-          <line x1="0" x2="26" y1="0" y2="0" :stroke="series.color" />
+          <rect class="legend-swatch" x="0" y="-7" width="26" height="8" :fill="series.color" />
           <text x="36" y="5">{{ series.label }}</text>
         </g>
       </g>
@@ -200,8 +200,7 @@ svg {
   stroke-width: 3.5;
 }
 
-.legend line {
-  stroke-linecap: round;
-  stroke-width: 3.5;
+.legend-swatch {
+  rx: 2;
 }
 </style>
