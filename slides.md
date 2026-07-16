@@ -21,8 +21,6 @@ layout: cover
 
 確率変数・収束・確率過程・応用までの見取り図
 
-[40-60分想定 / 測度論・Lebesgue積分の概論後]{class="mt-10 text-sm opacity-70"}
-
 ---
 layout: two-cols-header
 ---
@@ -51,21 +49,6 @@ layout: two-cols-header
 - 条件付き期待値とMartingale
 - 伊藤の公式の入口
 - Black-Scholesと最適戦略
-
----
-
-# 時間配分
-
-PDFとして読んでも流れが追えるように、定義はやや明示的に残す。
-
-| パート | 内容 | 目安 |
-|---|---|---:|
-| 1 | 確率空間・確率変数・分布 | 8分 |
-| 2 | 独立性・期待値・収束概念 | 12分 |
-| 3 | 大数の法則・中心極限定理 | 8分 |
-| 4 | 確率過程・条件付き期待値・Martingale | 15分 |
-| 5 | 伊藤の公式・Black-Scholes・最適戦略 | 12分 |
-| 6 | まとめ・議論 | 5分 |
 
 ---
 layout: section
