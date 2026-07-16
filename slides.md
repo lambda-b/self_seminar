@@ -794,9 +794,9 @@ Wiener過程、または1次元Brown運動 $(W_t)_{t\ge0}$ は、次を満たす
 ※連続な標本路を持つが、典型的には非常に荒く、有限変動でも微分可能でもない。
 ::
 
-::aside-box{title="補足: ベルヌーイ列の和との関係"}
+::aside-box{title="補足: Bernoulli列の和との関係"}
 
-独立な $\xi_k\in\{-1,1\}$ を用いたベルヌーイ列の和
+独立な $\xi_k\in\{-1,1\}$ を用いたBernoulli列の和
 
 $$
 W_t^{(n)}=\frac{1}{\sqrt{n}}\sum_{k=1}^{\lfloor nt\rfloor}\xi_k
