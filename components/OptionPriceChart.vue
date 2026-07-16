@@ -39,9 +39,9 @@
         </g>
       </g>
 
-      <text class="axis-label" :x="(plotLeft + plotRight) / 2" y="414" text-anchor="middle">原資産価格</text>
+      <text class="axis-label" :x="(plotLeft + plotRight) / 2" y="414" text-anchor="middle">原資産価格 S</text>
       <text class="axis-label vertical" x="18" :y="(plotTop + plotBottom) / 2" text-anchor="middle">
-        オプション価格
+        オプション価格 V
       </text>
 
       <line class="strike-line" :x1="xScale(strike)" :x2="xScale(strike)" :y1="plotTop" :y2="plotBottom" />
@@ -61,6 +61,10 @@
           <text x="36" y="5">{{ series.label }}</text>
         </g>
       </g>
+
+      <text class="time-order" :x="plotRight" :y="plotBottom + 48" text-anchor="end">
+        T1 &lt; T2 &lt; T3 &lt; T
+      </text>
     </svg>
   </figure>
 </template>
@@ -72,23 +76,23 @@ const plotLeft = 72;
 const plotRight = 704;
 const plotTop = 28;
 const plotBottom = 356;
-const minS = 40;
-const maxS = 170;
-const maxPrice = 76;
+const minS = 75;
+const maxS = 125;
+const maxPrice = 30;
 const strike = 100;
 const rate = 0.02;
 const volatility = 0.25;
 
 // biome-ignore lint/correctness/noUnusedVariables: referenced by the Vue template
-const xTicks = [50, 75, 100, 125, 150];
+const xTicks = [75, 90, 100, 110, 125];
 // biome-ignore lint/correctness/noUnusedVariables: referenced by the Vue template
-const yTicks = [0, 20, 40, 60];
+const yTicks = [0, 10, 20, 30];
 
 const curves = [
-  { label: "t=T1", tau: 0.8, color: "#176b87" },
-  { label: "t=T2", tau: 0.45, color: "#8a5a9e" },
-  { label: "t=T3", tau: 0.18, color: "#d07c2d" },
-  { label: "t=T", tau: 0, color: "#12343b" },
+  { label: "T1", tau: 0.8, color: "#176b87" },
+  { label: "T2", tau: 0.45, color: "#8a5a9e" },
+  { label: "T3", tau: 0.18, color: "#d07c2d" },
+  { label: "T", tau: 0, color: "#12343b" },
 ];
 
 const xScale = (s: number) => plotLeft + ((s - minS) / (maxS - minS)) * (plotRight - plotLeft);
@@ -160,7 +164,8 @@ svg {
 .ticks text,
 .legend text,
 .axis-label,
-.strike-label {
+.strike-label,
+.time-order {
   fill: #12343b;
   font-size: 15px;
 }
@@ -181,6 +186,10 @@ svg {
 }
 
 .strike-label {
+  font-weight: 700;
+}
+
+.time-order {
   font-weight: 700;
 }
 
