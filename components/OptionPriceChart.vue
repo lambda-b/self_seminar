@@ -3,7 +3,7 @@
     <svg viewBox="0 0 760 430" role="img" aria-labelledby="option-chart-title option-chart-desc">
       <title id="option-chart-title">Black-Scholesモデルにおけるコールオプション価格</title>
       <desc id="option-chart-desc">
-        横軸を原資産価格、縦軸をオプション価格として、時刻T1、T2、T3、満期Tの価格曲線を比較するグラフ。
+        横軸を原資産価格、縦軸をオプション価格として、時刻T1、T2、T3、SQ、満期Tの価格曲線を比較するグラフ。
       </desc>
 
       <g class="grid">
@@ -50,20 +50,19 @@
       <path
         v-for="series in seriesPaths"
         :key="series.label"
-        class="price-line"
+        :class="['price-line', series.colorClass]"
         :d="series.path"
-        :stroke="series.color"
       />
 
-      <g class="legend" :transform="`translate(${plotRight - 112}, ${plotBottom - 82})`">
+      <g class="legend" :transform="`translate(${plotRight - 116}, ${plotBottom - 104})`">
         <g v-for="(series, index) in seriesPaths" :key="`legend-${series.label}`" :transform="`translate(0, ${index * 24})`">
-          <line class="legend-line" x1="0" x2="24" y1="0" y2="0" :stroke="series.color" />
+          <line :class="['legend-line', series.colorClass]" x1="0" x2="24" y1="0" y2="0" />
           <text x="36" y="5">{{ series.label }}</text>
         </g>
       </g>
 
       <text class="time-order" :x="plotRight" :y="plotBottom + 48" text-anchor="end">
-        T1 &lt; T2 &lt; T3 &lt; T
+        T1 &lt; T2 &lt; T3 &lt; T(SQ) &lt; T(満期)
       </text>
     </svg>
   </figure>
@@ -87,10 +86,11 @@ const xTicks = [75, 90, 100, 110, 125];
 const yTicks = [0, 10, 20, 30];
 
 const curves = [
-  { label: "T1", tau: 0.8, color: "#176b87" },
-  { label: "T2", tau: 0.45, color: "#8a5a9e" },
-  { label: "T3", tau: 0.18, color: "#d07c2d" },
-  { label: "T", tau: 0, color: "#12343b" },
+  { label: "T1", tau: 0.8, colorClass: "series-1" },
+  { label: "T2", tau: 0.45, colorClass: "series-2" },
+  { label: "T3", tau: 0.18, colorClass: "series-3" },
+  { label: "T(SQ)", tau: 0.06, colorClass: "series-sq" },
+  { label: "T(満期)", tau: 0, colorClass: "series-expiry" },
 ];
 
 const xScale = (s: number) => plotLeft + ((s - minS) / (maxS - minS)) * (plotRight - plotLeft);
@@ -199,5 +199,25 @@ svg {
 .legend-line {
   stroke-linecap: round;
   stroke-width: 2.2;
+}
+
+.series-1 {
+  stroke: #176b87;
+}
+
+.series-2 {
+  stroke: #8a5a9e;
+}
+
+.series-3 {
+  stroke: #d07c2d;
+}
+
+.series-sq {
+  stroke: #65743a;
+}
+
+.series-expiry {
+  stroke: #12343b;
 }
 </style>
