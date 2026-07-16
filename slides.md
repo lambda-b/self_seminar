@@ -1003,7 +1003,8 @@ layout: two-cols-header
 
 # 確率微分方程式を解く
 
-<span class="sde-compact-marker"></span>
+::sde-compact-marker
+::
 
 ::left::
 
