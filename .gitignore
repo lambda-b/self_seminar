@@ -45,3 +45,4 @@ coverage/
 
 # custom
 work
+.codex-local/
